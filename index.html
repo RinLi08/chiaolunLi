@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHIAOLUN LI</title>
+    <!-- 加入這行來替換分頁圖示 -->
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ================= 基礎設定 ================= */
@@ -38,9 +41,15 @@
         
         .menu-category { 
             font-size: 12px; letter-spacing: 1.5px; color: #888; margin-bottom: 20px; 
-            text-transform: uppercase; cursor: pointer; padding: 6px 12px; border-radius: 4px; transition: 0.2s; text-align: center;
+            text-transform: uppercase; cursor: pointer; padding: 6px 12px; border-radius: 4px; transition: all 0.2s ease; text-align: center;
         }
         .menu-category:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .menu-category.active {
+            color: #ffffff !important;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.12);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
 
         .menu { width: 100%; flex-grow: 1; }
         .menu ul { list-style: none; margin-bottom: 15px; width: 100%; }
@@ -54,8 +63,19 @@
         .nav-item-text { 
             color: #aaaaaa; font-size: 14px; text-align: center; grid-column: 2;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            transition: all 0.2s ease;
         }
         .menu ul li:hover .nav-item-text { color: #ffffff; }
+
+        /* 左側選單高亮顯示樣式 */
+        .menu ul li.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .menu ul li.active .nav-item-text {
+            color: #ffffff !important;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+        }
 
         .project-order-btns { 
             grid-column: 3; display: flex; flex-direction: column; gap: 2px; opacity: 0; transition: opacity 0.2s; align-items: center;
@@ -184,7 +204,7 @@
         .media-slot.has-media .slot-btn-group { opacity: 0; }
         .media-slot.has-media:hover .slot-btn-group { opacity: 1; }
 
-        /* --- 多圖藝廊區塊 --- */
+        /* --- 多圖藝廊區塊（高度 260px、固定間距 2px、少圖時置中） --- */
         .gallery-grid-block {
             width: 100%; border: 2px dashed #444; border-radius: 8px; padding: 20px;
             display: flex; flex-direction: column; align-items: center; gap: 20px; transition: 0.3s;
@@ -192,10 +212,13 @@
         .gallery-grid-block.has-photos { border: none; padding: 0; }
         
         .photo-grid-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; width: 100%; align-items: start;
+            display: flex; flex-wrap: wrap; gap: 2px; width: 100%; justify-content: center;
         }
+
         .photo-grid-item {
-            position: relative; background: #222; border-radius: 6px; cursor: grab; overflow: hidden;
+            position: relative; background: transparent; border-radius: 2px; cursor: grab; overflow: hidden;
+            height: 260px;
+            flex: 0 0 auto;
             transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
         }
         .photo-grid-item:active { cursor: grabbing; }
@@ -203,7 +226,7 @@
         .photo-grid-item.drag-over { outline: 2px dashed #ffffff; transform: scale(1.02); }
 
         .photo-grid-item img {
-            width: 100%; height: auto; display: block; border-radius: 6px; transition: transform 0.3s ease;
+            width: auto; height: 100%; max-width: 100%; object-fit: contain; display: block; border-radius: 2px; transition: transform 0.3s ease;
         }
         .photo-grid-item:hover img { transform: scale(1.02); }
         
@@ -336,9 +359,11 @@
             .lightbox-btn { width: 40px; height: 40px; font-size: 18px; }
             .lightbox-prev { left: 10px; }
             .lightbox-next { right: 10px; }
+            .photo-grid-item { height: 180px; }
         }
         @media (max-width: 480px) {
             .gallery-view { grid-template-columns: 1fr; }
+            .photo-grid-item { height: 140px; }
         }
     </style>
 </head>
@@ -369,7 +394,7 @@
         </div>
 
         <nav class="menu">
-            <div class="menu-category" id="workHomeBtn" title="Home">WORKS</div>
+            <div class="menu-category active" id="workHomeBtn" title="Home">WORKS</div>
             <ul id="menuList"></ul>
             <div class="add-project-btn" id="addProjectBtn">+ 新增專案</div>
             <button class="reset-storage-btn" id="resetStorageBtn">重置回復預設預覽</button>
@@ -586,6 +611,7 @@
                     const detailItem = document.querySelector(`.project-detail-container[data-id="${id}"]`);
                     if(detailItem) detailItem.remove();
                     galleryView.style.display = 'grid';
+                    workHomeBtn.classList.add('active');
                     triggerAutoSave();
                 }
             });
@@ -603,7 +629,6 @@
             detailContainer.setAttribute('data-id', id);
             detailContainer.style.display = 'none';
             
-            // 修正：如果沒有傳入文字則留空，不再帶入測試用的提示預設文字
             const formattedDesc = descText !== null ? descText : "";
             detailContainer.innerHTML = `
                 <div class="detail-header-text">
@@ -833,6 +858,13 @@
 
             const img = document.createElement('img');
             img.src = src;
+
+            // 載入圖片後設定 aspect-ratio
+            img.onload = function() {
+                if (this.naturalWidth && this.naturalHeight) {
+                    item.style.aspectRatio = `${this.naturalWidth} / ${this.naturalHeight}`;
+                }
+            };
 
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-photo-btn';
@@ -1090,146 +1122,630 @@
         function loadDataFromLocalStorage() {
             const json = localStorage.getItem(STORAGE_KEY);
             if (!json) {
-                // 所有專案與其最新的完整內頁說明 (descText)
+                // 最新更新的專案初始資料（以相對路徑儲存）
                 const initialProjects = [
                     {
-                        title: "Animation Showreel",
-                        cover: "assets/covers/cover_show.png",
-                        descText: "Showcase of 2D animation and game VFX, highlighting a versatile adaptability across diverse art stylesfrom anime and stylized designs to commercial aesthetics.",
-                        blocks: [
-                            { type: "text", text: "Includes animated projects across TV series, feature films, commercials, short films, and music videos.", marginTop: "0px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/WwUb8YPPIrI?enablejsapi=1", mediaType: "youtube", marginTop: "0px" },
-                            { type: "text", text: "Specializing in the seamless integration of dynamic character animation and game visual effects (VFX).", marginTop: "30px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/yWMpS69BGuw?enablejsapi=1", mediaType: "youtube", marginTop: "0px" }
+                        "id": "item-1",
+                        "title": "Animation Showreel",
+                        "coverSrc": "assets/covers/cover_show.png",
+                        "descText": "Showcase of 2D animation and game VFX, highlighting a versatile adaptability across diverse art stylesfrom anime and stylized designs to commercial aesthetics.",
+                        "blocks": [
+                            {
+                                "type": "text",
+                                "text": "Includes animated projects across TV series, feature films, commercials, short films, and music videos.",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/WwUb8YPPIrI?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "text",
+                                "text": "Specializing in the seamless integration of dynamic character animation and game visual effects (VFX).",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/yWMpS69BGuw?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "0px"
+                            }
                         ]
                     },
                     {
-                        title: "VFX/Motion Design",
-                        cover: "assets/covers/cover_vfx.png",
-                        descText: "A showcasing of motion design and visual effects for Slot and Fishing games. Features include character animation, high-impact win/bonus VFX, dynamic loading scenes, and promotional motion banners. Designed to evoke strong visual impact and smooth responsiveness, enhancing overall player engagement.",
-                        blocks: [
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/NLLZIDt6P_A?enablejsapi=1", mediaType: "youtube", marginTop: "0px" },
-                            { type: "media", mediaSrc: "https://player.vimeo.com/video/1223922848", mediaType: "vimeo", marginTop: "37px" },
-                            { type: "media", mediaSrc: "https://player.vimeo.com/video/1223922847", mediaType: "vimeo", marginTop: "30px" },
-                            { type: "media", mediaSrc: "https://player.vimeo.com/video/1223922836", mediaType: "vimeo", marginTop: "30px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/9_QsZuRF4A4?enablejsapi=1", mediaType: "youtube", marginTop: "39px" },
-                            { type: "media", mediaSrc: "https://player.vimeo.com/video/1223922837", mediaType: "vimeo", marginTop: "13px" },
-                            { type: "media", mediaSrc: "https://player.vimeo.com/video/1223922838", mediaType: "vimeo", marginTop: "9px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/DRoo6UMWPRA?enablejsapi=1", mediaType: "youtube", marginTop: "30px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/cc1HCO5aScc?enablejsapi=1", mediaType: "youtube", marginTop: "26px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/g0hlSQ-TLU8?enablejsapi=1", mediaType: "youtube", marginTop: "30px" }
+                        "id": "item-2",
+                        "title": "VFX/Motion Design",
+                        "coverSrc": "assets/covers/cover_vfx.png",
+                        "descText": "A showcasing of motion design and visual effects for Slot and Fishing games. Features include character animation, high-impact win/bonus VFX, dynamic loading scenes, and promotional motion banners. Designed to evoke strong visual impact and smooth responsiveness, enhancing overall player engagement.",
+                        "blocks": [
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/NLLZIDt6P_A?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://player.vimeo.com/video/1223922848",
+                                "mediaType": "vimeo",
+                                "marginTop": "37px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://player.vimeo.com/video/1223922847",
+                                "mediaType": "vimeo",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://player.vimeo.com/video/1223922836",
+                                "mediaType": "vimeo",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/9_QsZuRF4A4?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "39px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://player.vimeo.com/video/1223922837",
+                                "mediaType": "vimeo",
+                                "marginTop": "13px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://player.vimeo.com/video/1223922838",
+                                "mediaType": "vimeo",
+                                "marginTop": "9px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/DRoo6UMWPRA?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/cc1HCO5aScc?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "26px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/g0hlSQ-TLU8?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "30px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Game Art Design", 
-                        cover: "assets/covers/cover_game.png",
-                        descText: "Comprehensive game art design spanning characters, assets, UI, background art, and promotional banners.",
-                        blocks: [
-                            { type: "media", mediaSrc: "assets/game_art/items1.png", mediaType: "image", marginTop: "0px" },
-                            { type: "media", mediaSrc: "assets/game_art/items2.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/game_art/items3.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/game_art/items4.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/game_art/items5.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/game_art/banners1.jpg", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/game_art/banners2.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/game_art/logos.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/game_art/ui.png", mediaType: "image", marginTop: "30px" }
+                    {
+                        "id": "item-3",
+                        "title": "Game Art Design",
+                        "coverSrc": "assets/covers/cover_game.png",
+                        "descText": "Comprehensive game art design spanning characters, assets, UI, background art, and promotional banners.",
+                        "blocks": [
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/items1.png",
+                                "mediaType": "image",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/items2.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/items3.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/items4.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/items5.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/banners1.jpg",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/banners2.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/logos.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/game_art/ui.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Character Design", 
-                        cover: "assets/covers/cover_cha.png",
-                        descText: "Character design across diverse mediumsincluding animated shorts, games, merchandise, and LINE stickersshowcasing versatile visual styles.",
-                        blocks: [
-                            { type: "gallery", images: ["assets/character_design/bird1.jpg","assets/character_design/bird2.jpg","assets/character_design/bird3.jpg","assets/character_design/bird4.jpg","assets/character_design/birdA.jpg","assets/character_design/birdB.jpg"], marginTop: "0px" },
-                            { type: "gallery", images: ["assets/character_design/monster1.jpg","assets/character_design/monster2.jpg","assets/character_design/monster3.jpg","assets/character_design/monster4.jpg","assets/character_design/monster5.jpg","assets/character_design/monster6.jpg"], marginTop: "30px" },
-                            { type: "gallery", images: ["assets/character_design/bunnyB.png","assets/character_design/bunnyA.png"], marginTop: "30px" },
-                            { type: "gallery", images: ["assets/character_design/cook1.jpg","assets/character_design/cook2.jpg","assets/character_design/cook3.jpg"], marginTop: "30px" },
-                            { type: "gallery", images: ["assets/character_design/ill1.jpg","assets/character_design/ill2.jpg","assets/character_design/ill3.jpg","assets/character_design/ill4.jpg","assets/character_design/IMGraa.png","assets/character_design/littkes.jpg"], marginTop: "30px" },
-                            { type: "gallery", images: ["assets/character_design/ls001.jpg","assets/character_design/ls002.jpg","assets/character_design/ls003.png","assets/character_design/ls004.png","assets/character_design/ls005.png","assets/character_design/ls006.png","assets/character_design/ls007.png","assets/character_design/ls008.png","assets/character_design/ls009.png","assets/character_design/ls010.png","assets/character_design/ls011.png","assets/character_design/ls012.png","assets/character_design/ls013.png","assets/character_design/ls014.png","assets/character_design/ls015.png","assets/character_design/ls016.png","assets/character_design/ls017.png","assets/character_design/ls018.png","assets/character_design/ls019.png"], marginTop: "30px" }
+                    {
+                        "id": "item-4",
+                        "title": "Character Design",
+                        "coverSrc": "assets/covers/cover_cha.png",
+                        "descText": "Character design across diverse mediumsincluding animated shorts, games, merchandise, and LINE stickersshowcasing versatile visual styles.",
+                        "blocks": [
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/character_design/bird1.jpg",
+                                    "assets/character_design/bird2.jpg",
+                                    "assets/character_design/bird3.jpg",
+                                    "assets/character_design/bird4.jpg",
+                                    "assets/character_design/birdA.jpg",
+                                    "assets/character_design/birdB.jpg"
+                                ],
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/character_design/monster1.jpg",
+                                    "assets/character_design/monster2.jpg",
+                                    "assets/character_design/monster3.jpg",
+                                    "assets/character_design/monster4.jpg",
+                                    "assets/character_design/monster5.jpg",
+                                    "assets/character_design/monster6.jpg"
+                                ],
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/character_design/bunnyB.png",
+                                    "assets/character_design/bunnyA.png"
+                                ],
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/character_design/cook1.jpg",
+                                    "assets/character_design/cook2.jpg",
+                                    "assets/character_design/cook3.jpg"
+                                ],
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/character_design/ill1.jpg",
+                                    "assets/character_design/ill2.jpg",
+                                    "assets/character_design/ill3.jpg",
+                                    "assets/character_design/ill4.jpg",
+                                    "assets/character_design/littkes.jpg",
+                                    "assets/character_design/IMGraa.png"
+                                ],
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/character_design/ls001.jpg",
+                                    "assets/character_design/ls002.jpg",
+                                    "assets/character_design/ls003.png",
+                                    "assets/character_design/ls004.png",
+                                    "assets/character_design/ls005.png",
+                                    "assets/character_design/ls006.png",
+                                    "assets/character_design/ls007.png",
+                                    "assets/character_design/ls008.png",
+                                    "assets/character_design/ls009.png",
+                                    "assets/character_design/ls010.png",
+                                    "assets/character_design/ls011.png",
+                                    "assets/character_design/ls012.png",
+                                    "assets/character_design/ls013.png",
+                                    "assets/character_design/ls014.png",
+                                    "assets/character_design/ls015.png",
+                                    "assets/character_design/ls016.png",
+                                    "assets/character_design/ls017.png",
+                                    "assets/character_design/ls018.png",
+                                    "assets/character_design/ls019.png"
+                                ],
+                                "marginTop": "30px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Illustration", 
-                        cover: "assets/covers/cover_illu.png",
-                        descText: "Illustration with diverse themes, utilizing a range of traditional and mixed mediaincluding ink pen, poster color, and digital tools.",
-                        blocks: [
-                            { type: "media", mediaSrc: "assets/illustration/sunsleep.jpg", mediaType: "image", marginTop: "0px" },
-                            { type: "media", mediaSrc: "assets/illustration/love.jpg", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/illustration/books.jpg", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/illustration/street.jpg", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/illustration/home.jpg", mediaType: "image", marginTop: "30px" },
-                            { type: "gallery", images: ["assets/illustration/l_bulls.png","assets/illustration/l_80's.png","assets/illustration/l_JK90's.png","assets/illustration/l_teashop.png","assets/illustration/lovely.jpg","assets/illustration/2018dog.jpg","assets/illustration/sunny rain.jpg","assets/illustration/video game.png","assets/illustration/lisa.png"], marginTop: "50px" }
+                    {
+                        "id": "item-5",
+                        "title": "Illustration",
+                        "coverSrc": "assets/covers/cover_illu.png",
+                        "descText": "Illustration with diverse themes, utilizing a range of traditional and mixed mediaincluding ink pen, poster color, and digital tools.",
+                        "blocks": [
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/illustration/sunsleep.jpg",
+                                "mediaType": "image",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/illustration/love.jpg",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/illustration/books.jpg",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/illustration/street.jpg",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/illustration/home.jpg",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/illustration/l_bulls.png",
+                                    "assets/illustration/l_80's.png",
+                                    "assets/illustration/l_JK90's.png",
+                                    "assets/illustration/l_teashop.png",
+                                    "assets/illustration/lovely.jpg",
+                                    "assets/illustration/2018dog.jpg",
+                                    "assets/illustration/sunny rain.jpg",
+                                    "assets/illustration/video game.png",
+                                    "assets/illustration/lisa.png"
+                                ],
+                                "marginTop": "50px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Comics to Animation", 
-                        cover: "assets/covers/cover_comic.png",
-                        descText: "Collaborating with comic artists to adapt 2D comics into dynamic motion content, driving engagement and social media reach for gaming and entertainment platforms.",
-                        blocks: [
-                            { type: "media", mediaSrc: "assets/comics_animation/story001.mp4", mediaType: "video", marginTop: "0px" },
-                            { type: "media", mediaSrc: "assets/comics_animation/story002.mp4", mediaType: "video", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/comics_animation/story003.mp4", mediaType: "video", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/comics_animation/story004.mp4", mediaType: "video", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/comics_animation/story005.mp4", mediaType: "video", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/comics_animation/story006.mp4", mediaType: "video", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/comics_animation/story007.mp4", mediaType: "video", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/comics_animation/cam_buy11.mp4", mediaType: "video", marginTop: "30px" }
+                    {
+                        "id": "item-6",
+                        "title": "Comics to Animation",
+                        "coverSrc": "assets/covers/cover_comic.png",
+                        "descText": "Collaborating with comic artists to adapt 2D comics into dynamic motion content, driving engagement and social media reach for gaming and entertainment platforms.",
+                        "blocks": [
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/story001.mp4",
+                                "mediaType": "video",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/story002.mp4",
+                                "mediaType": "video",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/story003.mp4",
+                                "mediaType": "video",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/story004.mp4",
+                                "mediaType": "video",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/story005.mp4",
+                                "mediaType": "video",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/story006.mp4",
+                                "mediaType": "video",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/story007.mp4",
+                                "mediaType": "video",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/comics_animation/cam_buy11.mp4",
+                                "mediaType": "video",
+                                "marginTop": "30px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Concept Art", 
-                        cover: "assets/covers/cover_cep.png",
-                        descText: "Concept art for games and animation, shaping visual styles and worldbuilding.",
-                        blocks: [
-                            { type: "media", mediaSrc: "assets/concept/concE.jpg", mediaType: "image", marginTop: "0px" },
-                            { type: "media", mediaSrc: "assets/concept/concept-01.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/concept/concB.jpg", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/concept/war1.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/concept/war2.png", mediaType: "image", marginTop: "30px" }
+                    {
+                        "id": "item-7",
+                        "title": "Concept Art",
+                        "coverSrc": "assets/covers/cover_cep.png",
+                        "descText": "Concept art for games and animation, shaping visual styles and worldbuilding.",
+                        "blocks": [
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/concept/concE.jpg",
+                                "mediaType": "image",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/concept/concept-01.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/concept/concB.jpg",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/concept/war1.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/concept/war2.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Storyboard", 
-                        cover: "assets/covers/cover_storyboard.png",
-                        descText: "Storyboard design for commercials, animated shorts, and promotional videos, focused on visual rhythm and dynamic pacing.",
-                        blocks: [
-                            { type: "text", text: "Animatics for \"Eternal Night,\" a promotional teaser for a fantasy creature-inspired jewelry collection. Translating the core concept into a dynamic visual narrative.", marginTop: "0px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/-2fczYOPiMo?enablejsapi=1", mediaType: "youtube", marginTop: "0px" },
-                            { type: "text", text: "Storyboard animatic for a section of an animated short film, focusing on cinematic continuity, character movement, and narrative pacing.", marginTop: "30px" },
-                            { type: "media", mediaSrc: "https://www.youtube.com/embed/ElZ-KUJWaZY?enablejsapi=1", mediaType: "youtube", marginTop: "0px" },
-                            { type: "text", text: "Storyboard design for \"Amo\" bakerys Mid-Autumn Festival commercial, capturing festive storytelling and brand identity.", marginTop: "30px" },
-                            { type: "gallery", images: ["assets/storyboard/AmoStoryboard_en-1.jpg","assets/storyboard/AmoStoryboard_en-2.jpg","assets/storyboard/AmoStoryboard_en-3.jpg","assets/storyboard/AmoStoryboard_en-4.jpg","assets/storyboard/AmoStoryboard_en-5.jpg","assets/storyboard/AmoStoryboard_en-6.jpg"], marginTop: "0px" }
+                    {
+                        "id": "item-8",
+                        "title": "Storyboard",
+                        "coverSrc": "assets/covers/cover_storyboard.png",
+                        "descText": "Storyboard design for commercials, animated shorts, and promotional videos, focused on visual rhythm and dynamic pacing.",
+                        "blocks": [
+                            {
+                                "type": "text",
+                                "text": "Animatics for \"Eternal Night,\" a promotional teaser for a fantasy creature-inspired jewelry collection. Translating the core concept into a dynamic visual narrative.",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/-2fczYOPiMo?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "text",
+                                "text": "Storyboard animatic for a section of an animated short film, focusing on cinematic continuity, character movement, and narrative pacing.",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "https://www.youtube.com/embed/ElZ-KUJWaZY?enablejsapi=1",
+                                "mediaType": "youtube",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "text",
+                                "text": "Storyboard design for \"Amo\" bakerys Mid-Autumn Festival commercial, capturing festive storytelling and brand identity.",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/storyboard/AmoStoryboard_en-1.jpg",
+                                    "assets/storyboard/AmoStoryboard_en-2.jpg",
+                                    "assets/storyboard/AmoStoryboard_en-3.jpg",
+                                    "assets/storyboard/AmoStoryboard_en-4.jpg",
+                                    "assets/storyboard/AmoStoryboard_en-5.jpg",
+                                    "assets/storyboard/AmoStoryboard_en-6.jpg"
+                                ],
+                                "marginTop": "0px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Background Art", 
-                        cover: "assets/covers/cover_bg.png",
-                        descText: "Background art for games and animated shorts, spanning high-intensity battlefields to warm, stylized environments.",
-                        blocks: [
-                            { type: "text", text: "Game background art: Battlefield. High-intensity combat environment created with rich atmospheric lighting.", marginTop: "0px" },
-                            { type: "media", mediaSrc: "assets/bg/sag01.png", mediaType: "image", marginTop: "0px" },
-                            { type: "media", mediaSrc: "assets/bg/sag02.png", mediaType: "image", marginTop: "12px" },
-                            { type: "text", text: "Animated short background: Stylized & Cute. Warm tones and charming fairytale aesthetics.", marginTop: "34px" },
-                            { type: "media", mediaSrc: "assets/bg/c01.png", mediaType: "image", marginTop: "0px" },
-                            { type: "media", mediaSrc: "assets/bg/c03.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/bg/c04.png", mediaType: "image", marginTop: "30px" },
-                            { type: "media", mediaSrc: "assets/bg/c04mach.png", mediaType: "image", marginTop: "30px" }
+                    {
+                        "id": "item-9",
+                        "title": "Background Art",
+                        "coverSrc": "assets/covers/cover_bg.png",
+                        "descText": "Background art for games and animated shorts, spanning high-intensity battlefields to warm, stylized environments.",
+                        "blocks": [
+                            {
+                                "type": "text",
+                                "text": "Game background art: Battlefield. High-intensity combat environment created with rich atmospheric lighting.",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/bg/sag01.png",
+                                "mediaType": "image",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/bg/sag02.png",
+                                "mediaType": "image",
+                                "marginTop": "12px"
+                            },
+                            {
+                                "type": "text",
+                                "text": "Animated short background: Stylized & Cute. Warm tones and charming fairytale aesthetics.",
+                                "marginTop": "34px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/bg/c01.png",
+                                "mediaType": "image",
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/bg/c03.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/bg/c04.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            },
+                            {
+                                "type": "media",
+                                "mediaSrc": "assets/bg/c04mach.png",
+                                "mediaType": "image",
+                                "marginTop": "30px"
+                            }
                         ]
                     },
-                    { 
-                        title: "Sketch", 
-                        cover: "assets/covers/cover_sketch.png",
-                        descText: "Daily sketches and concept explorations, capturing quick ideas and dynamic observational studies.",
-                        blocks: [
-                            { type: "gallery", images: ["assets/sketch/isk06.jpg","assets/sketch/IMG_2095.JPG","assets/sketch/isk03.jpg","assets/sketch/isk02.jpg","assets/sketch/isk05.jpg","assets/sketch/s010.jpg","assets/sketch/rough.jpg","assets/sketch/IMG_1451.JPG","assets/sketch/l003.jpg","assets/sketch/s004.jpg","assets/sketch/s019.jpg","assets/sketch/s025.jpg","assets/sketch/samurai_05.png","assets/sketch/samurai_01.png","assets/sketch/samurai_02.png","assets/sketch/sc_4.jpg","assets/sketch/sc_5.jpg","assets/sketch/sc_10.jpg"], marginTop: "0px" },
-                            { type: "gallery", images: ["assets/sketch/100days/IMG_1811.PNG","assets/sketch/100days/IMG_2220.PNG","assets/sketch/100days/IMG_2227.PNG","assets/sketch/100days/IMG_2221.PNG","assets/sketch/100days/IMG_2222.PNG","assets/sketch/100days/IMG_2223.PNG","assets/sketch/100days/IMG_2224.PNG","assets/sketch/100days/IMG_2225.PNG","assets/sketch/100days/IMG_2226.PNG","assets/sketch/100days/IMG_2228.PNG","assets/sketch/100days/IMG_2231.PNG","assets/sketch/100days/IMG_2233.PNG","assets/sketch/100days/IMG_2229.PNG","assets/sketch/100days/IMG_2230.PNG","assets/sketch/100days/IMG_2232.PNG","assets/sketch/100days/IMG_2234.PNG","assets/sketch/100days/IMG_2238.PNG","assets/sketch/100days/IMG_2241.PNG","assets/sketch/100days/IMG_2235.PNG","assets/sketch/100days/IMG_2236.PNG","assets/sketch/100days/IMG_2237.PNG","assets/sketch/100days/IMG_2239.PNG","assets/sketch/100days/IMG_2245.PNG","assets/sketch/100days/IMG_2242.PNG","assets/sketch/100days/IMG_2240.PNG","assets/sketch/100days/IMG_2243.PNG","assets/sketch/100days/IMG_2244.PNG","assets/sketch/100days/IMG_2246.PNG","assets/sketch/100days/IMG_2247.PNG","assets/sketch/100days/IMG_2248.PNG","assets/sketch/100days/IMG_2255.PNG","assets/sketch/100days/IMG_2261.PNG","assets/sketch/100days/IMG_2270.PNG","assets/sketch/100days/IMG_2272.PNG","assets/sketch/100days/IMG_2381.PNG","assets/sketch/100days/IMG_2382.PNG","assets/sketch/100days/IMG_2383.PNG","assets/sketch/100days/IMG_2384.PNG","assets/sketch/100days/IMG_2385.PNG","assets/sketch/100days/IMG_2386.PNG","assets/sketch/100days/IMG_2412.PNG","assets/sketch/100days/IMG_2413.PNG","assets/sketch/100days/IMG_2414.PNG","assets/sketch/100days/IMG_2449.PNG","assets/sketch/100days/IMG_2450.PNG","assets/sketch/100days/IMG_2451.PNG","assets/sketch/100days/IMG_2452.PNG","assets/sketch/100days/IMG_2473.PNG","assets/sketch/100days/IMG_2468.jpg","assets/sketch/100days/IMG_2483.PNG","assets/sketch/100days/IMG_2511.PNG","assets/sketch/100days/IMG_2481.PNG","assets/sketch/100days/IMG_2482.PNG","assets/sketch/100days/IMG_2484.PNG","assets/sketch/100days/IMG_2504.PNG","assets/sketch/100days/IMG_2505.PNG","assets/sketch/100days/IMG_2506.PNG","assets/sketch/100days/IMG_2507.PNG","assets/sketch/100days/IMG_2509.PNG","assets/sketch/100days/IMG_2510.PNG","assets/sketch/100days/IMG_2512.PNG","assets/sketch/100days/IMG_2532.PNG","assets/sketch/100days/IMG_2534.PNG","assets/sketch/100days/IMG_2508.PNG","assets/sketch/100days/IMG_2548.PNG","assets/sketch/100days/IMG_2530.PNG","assets/sketch/100days/IMG_2533.PNG","assets/sketch/100days/IMG_2535.PNG","assets/sketch/100days/IMG_2637.PNG","assets/sketch/100days/IMG_2531.PNG","assets/sketch/100days/IMG_2547.PNG","assets/sketch/100days/IMG_2549.PNG","assets/sketch/100days/IMG_2550.PNG","assets/sketch/100days/IMG_2551.PNG","assets/sketch/100days/IMG_2638.PNG","assets/sketch/100days/IMG_2639.PNG","assets/sketch/100days/IMG_2640.PNG","assets/sketch/100days/IMG_2643.PNG","assets/sketch/100days/IMG_2641.PNG","assets/sketch/100days/IMG_2642.PNG","assets/sketch/100days/IMG_2644.PNG","assets/sketch/100days/IMG_2649.jpg","assets/sketch/100days/IMG_2650.PNG","assets/sketch/100days/IMG_2652.PNG","assets/sketch/100days/IMG_2653.PNG","assets/sketch/100days/IMG_2659.PNG","assets/sketch/100days/IMG_2645.PNG"], marginTop: "50px" }
+                    {
+                        "id": "item-10",
+                        "title": "Sketch",
+                        "coverSrc": "assets/covers/cover_sketch.png",
+                        "descText": "Daily sketches and concept explorations, capturing quick ideas and dynamic observational studies.",
+                        "blocks": [
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/sketch/100days/IMG_2222.PNG",
+                                    "assets/sketch/100days/IMG_1811.PNG",
+                                    "assets/sketch/100days/IMG_2220.PNG",
+                                    "assets/sketch/100days/IMG_2227.PNG",
+                                    "assets/sketch/100days/IMG_2230.PNG",
+                                    "assets/sketch/100days/IMG_2221.PNG",
+                                    "assets/sketch/100days/IMG_2223.PNG",
+                                    "assets/sketch/100days/IMG_2224.PNG",
+                                    "assets/sketch/100days/IMG_2225.PNG",
+                                    "assets/sketch/100days/IMG_2226.PNG",
+                                    "assets/sketch/100days/IMG_2233.PNG",
+                                    "assets/sketch/100days/IMG_2228.PNG",
+                                    "assets/sketch/100days/IMG_2231.PNG",
+                                    "assets/sketch/100days/IMG_2235.PNG",
+                                    "assets/sketch/100days/IMG_2237.PNG",
+                                    "assets/sketch/100days/IMG_2236.PNG",
+                                    "assets/sketch/100days/IMG_2234.PNG",
+                                    "assets/sketch/100days/IMG_2240.PNG",
+                                    "assets/sketch/100days/IMG_2241.PNG",
+                                    "assets/sketch/100days/IMG_2229.PNG",
+                                    "assets/sketch/100days/IMG_2238.PNG",
+                                    "assets/sketch/100days/IMG_2232.PNG",
+                                    "assets/sketch/100days/IMG_2239.PNG",
+                                    "assets/sketch/100days/IMG_2245.PNG",
+                                    "assets/sketch/100days/IMG_2242.PNG",
+                                    "assets/sketch/100days/IMG_2243.PNG",
+                                    "assets/sketch/100days/IMG_2244.PNG",
+                                    "assets/sketch/100days/IMG_2246.PNG",
+                                    "assets/sketch/100days/IMG_2247.PNG",
+                                    "assets/sketch/100days/IMG_2248.PNG",
+                                    "assets/sketch/100days/IMG_2255.PNG",
+                                    "assets/sketch/100days/IMG_2261.PNG",
+                                    "assets/sketch/100days/IMG_2270.PNG",
+                                    "assets/sketch/100days/IMG_2272.PNG",
+                                    "assets/sketch/100days/IMG_2381.PNG",
+                                    "assets/sketch/100days/IMG_2382.PNG",
+                                    "assets/sketch/100days/IMG_2383.PNG",
+                                    "assets/sketch/100days/IMG_2384.PNG",
+                                    "assets/sketch/100days/IMG_2385.PNG",
+                                    "assets/sketch/100days/IMG_2386.PNG",
+                                    "assets/sketch/100days/IMG_2412.PNG",
+                                    "assets/sketch/100days/IMG_2413.PNG",
+                                    "assets/sketch/100days/IMG_2414.PNG",
+                                    "assets/sketch/100days/IMG_2449.PNG",
+                                    "assets/sketch/100days/IMG_2450.PNG",
+                                    "assets/sketch/100days/IMG_2451.PNG",
+                                    "assets/sketch/100days/IMG_2452.PNG",
+                                    "assets/sketch/100days/IMG_2473.PNG",
+                                    "assets/sketch/100days/IMG_2468.jpg",
+                                    "assets/sketch/100days/IMG_2483.PNG",
+                                    "assets/sketch/100days/IMG_2482.PNG",
+                                    "assets/sketch/100days/IMG_2511.PNG",
+                                    "assets/sketch/100days/IMG_2481.PNG",
+                                    "assets/sketch/100days/IMG_2484.PNG",
+                                    "assets/sketch/100days/IMG_2504.PNG",
+                                    "assets/sketch/100days/IMG_2505.PNG",
+                                    "assets/sketch/100days/IMG_2506.PNG",
+                                    "assets/sketch/100days/IMG_2507.PNG",
+                                    "assets/sketch/100days/IMG_2509.PNG",
+                                    "assets/sketch/100days/IMG_2510.PNG",
+                                    "assets/sketch/100days/IMG_2512.PNG",
+                                    "assets/sketch/100days/IMG_2532.PNG",
+                                    "assets/sketch/100days/IMG_2534.PNG",
+                                    "assets/sketch/100days/IMG_2508.PNG",
+                                    "assets/sketch/100days/IMG_2548.PNG",
+                                    "assets/sketch/100days/IMG_2530.PNG",
+                                    "assets/sketch/100days/IMG_2533.PNG",
+                                    "assets/sketch/100days/IMG_2535.PNG",
+                                    "assets/sketch/100days/IMG_2637.PNG",
+                                    "assets/sketch/100days/IMG_2531.PNG",
+                                    "assets/sketch/100days/IMG_2547.PNG",
+                                    "assets/sketch/100days/IMG_2549.PNG",
+                                    "assets/sketch/100days/IMG_2550.PNG",
+                                    "assets/sketch/100days/IMG_2551.PNG",
+                                    "assets/sketch/100days/IMG_2638.PNG",
+                                    "assets/sketch/100days/IMG_2639.PNG",
+                                    "assets/sketch/100days/IMG_2640.PNG",
+                                    "assets/sketch/100days/IMG_2643.PNG",
+                                    "assets/sketch/100days/IMG_2641.PNG",
+                                    "assets/sketch/100days/IMG_2642.PNG",
+                                    "assets/sketch/100days/IMG_2644.PNG",
+                                    "assets/sketch/100days/IMG_2649.jpg",
+                                    "assets/sketch/100days/IMG_2650.PNG",
+                                    "assets/sketch/100days/IMG_2652.PNG",
+                                    "assets/sketch/100days/IMG_2653.PNG",
+                                    "assets/sketch/100days/IMG_2659.PNG",
+                                    "assets/sketch/100days/IMG_2645.PNG"
+                                ],
+                                "marginTop": "0px"
+                            },
+                            {
+                                "type": "gallery",
+                                "images": [
+                                    "assets/sketch/isk06.jpg",
+                                    "assets/sketch/IMG_2095.JPG",
+                                    "assets/sketch/isk03.jpg",
+                                    "assets/sketch/isk02.jpg",
+                                    "assets/sketch/isk05.jpg",
+                                    "assets/sketch/s010.jpg",
+                                    "assets/sketch/rough.jpg",
+                                    "assets/sketch/IMG_1451.JPG",
+                                    "assets/sketch/l003.jpg",
+                                    "assets/sketch/s004.jpg",
+                                    "assets/sketch/s019.jpg",
+                                    "assets/sketch/samurai_02.png",
+                                    "assets/sketch/samurai_05.png",
+                                    "assets/sketch/samurai_01.png",
+                                    "assets/sketch/s025.jpg",
+                                    "assets/sketch/sc_4.jpg",
+                                    "assets/sketch/sc_5.jpg"
+                                ],
+                                "marginTop": "13px"
+                            }
                         ]
                     }
                 ];
 
                 initialProjects.forEach(item => {
-                    createProject(item.title, null, item.cover, item.descText, item.blocks || []);
+                    createProject(item.title, item.id, item.coverSrc, item.descText, item.blocks || []);
                 });
                 return;
             }
@@ -1269,12 +1785,26 @@
             if (targetDetail) {
                 targetDetail.style.display = 'block';
             }
+
+            // 更新左側選單高亮狀態
+            workHomeBtn.classList.remove('active');
+            document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
+            const activeLi = document.querySelector(`#menuList li[data-id="${id}"]`);
+            if (activeLi) {
+                activeLi.classList.add('active');
+            }
+
             document.getElementById('mainContent').scrollTop = 0;
         }
 
         workHomeBtn.addEventListener('click', () => {
             document.querySelectorAll('.project-detail-container').forEach(detail => detail.style.display = 'none');
             galleryView.style.display = 'grid';
+            
+            // 高亮 WORKS，移除專案列表高亮
+            document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
+            workHomeBtn.classList.add('active');
+
             document.getElementById('mainContent').scrollTop = 0;
             sidebar.classList.remove('active');
         });
