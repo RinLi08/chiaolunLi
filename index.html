@@ -96,6 +96,13 @@
         }
         .reset-storage-btn:hover { color: #ff5555; }
 
+        .about-nav-btn {
+            color: #888; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+            cursor: pointer; padding: 6px 12px; border-radius: 4px; transition: all 0.2s ease; margin-bottom: 12px;
+        }
+        .about-nav-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .about-nav-btn.active { color: #fff; font-weight: bold; background: rgba(255,255,255,0.12); text-shadow: 0 0 8px rgba(255,255,255,0.6); }
+
         .contact-section { margin-top: auto; padding-bottom: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .contact-title { color: #888; font-size: 14px; letter-spacing: 1px; margin-bottom: 12px; }
         .social-icons { display: flex; gap: 16px; justify-content: center; align-items: center; }
@@ -253,6 +260,18 @@
         .text-block:hover { border-color: #777; }
         .text-block:focus { border: 1px solid #fff; background: rgba(255,255,255,0.1); outline: none; }
 
+        /* --- 軟體圖示網格 --- */
+        .tools-grid {
+            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: center; width: 100%; padding: 20px 0;
+        }
+        .tool-icon-item {
+            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
+        }
+        .tool-icon-item:hover { transform: translateY(-3px) scale(1.08); }
+        .tool-icon-item img {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+        }
+
         /* --- 回頁首 Top 按鈕 --- */
         .back-to-top-container {
             display: flex; justify-content: center; margin-top: 60px; padding-bottom: 20px;
@@ -400,6 +419,8 @@
             <button class="reset-storage-btn" id="resetStorageBtn">重置回復預設預覽</button>
         </nav>
 
+        <div class="about-nav-btn" id="aboutBtn" title="About">ABOUT</div>
+
         <div class="contact-section">
             <div class="contact-title">Contact</div>
             <div class="social-icons">
@@ -416,6 +437,64 @@
     <div class="main-content" id="mainContent">
         <main class="gallery-view" id="galleryView"></main>
         <div id="allProjectsDetails"></div>
+
+        <!-- ABOUT 靜態頁面區塊 -->
+        <div class="project-detail-container" id="aboutSection" style="display: none;">
+            <div class="detail-header-text" style="margin-bottom: 0;">
+                <h1 class="detail-title">ABOUT</h1>
+            </div>
+
+            <div class="dynamic-content-area">
+                <div class="content-block-item" style="margin-top: 80px;">
+                    <div class="text-block">
+                        Hi, I’m Chiao-Lun Li, a visual artist specializing in 2D animation and game art development. Known for strong artistic versatility, my work spans animated series, commercial storyboards, Slot & Fish Game VFX/motion design, and character concepts. From high-intensity combat VFX and dynamic pacing to warm, stylized illustrations, I bring ideas to life across diverse aesthetic styles.<br><br>
+                        Beyond digital creation, I have a passion for bringing my original character designs into the physical world—handcrafting unique jewelry using metalsmithing, clay sculpting, and wax carving techniques (featured below).
+                    </div>
+                </div>
+
+                <div class="content-block-item" style="margin-top: 50px;">
+                    <div class="gallery-grid-block has-photos">
+                        <div class="photo-grid-container" id="aboutGalleryContainer">
+                            <div class="photo-grid-item"><img src="assets/others/pic_01.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_02.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_03.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_04.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_05.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_06.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_07.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_08.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_09.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_10.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_11.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_12.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_13.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_14.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_15.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_16.png" alt=""></div>
+                            <div class="photo-grid-item"><img src="assets/others/pic_17.png" alt=""></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-block-item" style="margin-top: 60px;">
+                    <div style="text-align: center; color: #ffffff; font-size: 20px; font-weight: 300; letter-spacing: 2px; margin-bottom: 25px;">SOFTWARE & TOOLS</div>
+                    <div class="tools-grid">
+                        <div class="tool-icon-item" title="Photoshop"><img src="assets/icon/ic_ps.png" alt="Photoshop"></div>
+                        <div class="tool-icon-item" title="After Effects"><img src="assets/icon/ic_ae.png" alt="After Effects"></div>
+                        <div class="tool-icon-item" title="Illustrator"><img src="assets/icon/ic_ai.png" alt="Illustrator"></div>
+                        <div class="tool-icon-item" title="Spine 2D"><img src="assets/icon/ic_spine.png" alt="Spine 2D"></div>
+                        <div class="tool-icon-item" title="Clip Studio Paint"><img src="assets/icon/ic_clp.png" alt="Clip Studio Paint"></div>
+                        <div class="tool-icon-item" title="Procreate"><img src="assets/icon/ic_procreate.png" alt="Procreate"></div>
+                        <div class="tool-icon-item" title="Blender"><img src="assets/icon/ic_blender.png" alt="Blender"></div>
+                        <div class="tool-icon-item" title="Figma"><img src="assets/icon/ic_fig.png" alt="Figma"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="back-to-top-container">
+                <button class="back-to-top-btn">▲ TOP</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -434,6 +513,8 @@
         const galleryView = document.getElementById('galleryView');
         const allProjectsDetails = document.getElementById('allProjectsDetails');
         const workHomeBtn = document.getElementById('workHomeBtn');
+        const aboutBtn = document.getElementById('aboutBtn');
+        const aboutSection = document.getElementById('aboutSection');
         const addProjectBtn = document.getElementById('addProjectBtn');
         
         const coverUploader = document.getElementById('coverUploader');
@@ -454,6 +535,8 @@
         let saveTimeout = null;
         let titleClickCount = 0;
         let titleClickTimer = null;
+        let currentGalleryImages = [];
+        let currentImageIndex = 0;
 
         // 連擊左上角標題 3 下觸發解鎖編輯按鈕
         authorName.addEventListener('click', () => {
@@ -679,7 +762,7 @@
                     <span>間距</span>
                     <input type="range" class="spacing-slider" min="0" max="100" value="${sliderVal}">
                     <button class="block-move-btn block-up-btn" title="上移區塊">▲</button>
-                    <button class="block-move-btn block-down-btn" title="下移區塊">▼</button>
+                    <button class="block-move-btn block-down-btn" title="向下移動">▼</button>
                     <button class="delete-block-btn" title="刪除此區塊">✕</button>
                 `;
 
@@ -929,6 +1012,25 @@
             item.appendChild(deleteBtn);
             container.appendChild(item);
             galleryBlock.classList.add('has-photos');
+        }
+
+        function initAboutGalleryLightbox() {
+            const container = document.getElementById('aboutGalleryContainer');
+            if (!container) return;
+            const items = container.querySelectorAll('.photo-grid-item');
+            items.forEach((item) => {
+                const img = item.querySelector('img');
+                img.onload = function() {
+                    if (this.naturalWidth && this.naturalHeight) {
+                        item.style.aspectRatio = `${this.naturalWidth} / ${this.naturalHeight}`;
+                    }
+                };
+                item.addEventListener('click', () => {
+                    const allImgs = Array.from(container.querySelectorAll('img')).map(i => i.src);
+                    const index = allImgs.indexOf(img.src);
+                    openLightbox(allImgs, index);
+                });
+            });
         }
 
         function openLightbox(images, index) {
@@ -1779,7 +1881,10 @@
 
         function openDetailView(id) {
             galleryView.style.display = 'none';
-            document.querySelectorAll('.project-detail-container').forEach(detail => detail.style.display = 'none');
+            aboutSection.style.display = 'none';
+            document.querySelectorAll('.project-detail-container').forEach(detail => {
+                if (detail.id !== 'aboutSection') detail.style.display = 'none';
+            });
             
             const targetDetail = document.querySelector(`.project-detail-container[data-id="${id}"]`);
             if (targetDetail) {
@@ -1788,6 +1893,7 @@
 
             // 更新左側選單高亮狀態
             workHomeBtn.classList.remove('active');
+            aboutBtn.classList.remove('active');
             document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
             const activeLi = document.querySelector(`#menuList li[data-id="${id}"]`);
             if (activeLi) {
@@ -1801,15 +1907,31 @@
             document.querySelectorAll('.project-detail-container').forEach(detail => detail.style.display = 'none');
             galleryView.style.display = 'grid';
             
-            // 高亮 WORKS，移除專案列表高亮
+            // 高亮 WORKS，移除專案與 ABOUT 高亮
             document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
+            aboutBtn.classList.remove('active');
             workHomeBtn.classList.add('active');
 
             document.getElementById('mainContent').scrollTop = 0;
             sidebar.classList.remove('active');
         });
 
+        aboutBtn.addEventListener('click', () => {
+            galleryView.style.display = 'none';
+            document.querySelectorAll('.project-detail-container').forEach(detail => detail.style.display = 'none');
+            aboutSection.style.display = 'block';
+
+            // 高亮 ABOUT，移除其他高亮
+            workHomeBtn.classList.remove('active');
+            document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
+            aboutBtn.classList.add('active');
+
+            document.getElementById('mainContent').scrollTop = 0;
+            sidebar.classList.remove('active');
+        });
+
         loadDataFromLocalStorage();
+        initAboutGalleryLightbox();
     </script>
 </body>
 </html>
