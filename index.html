@@ -1,2081 +1,1984 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHIAOLUN LI</title>
-    <!-- 加入這行來替換分頁圖示 -->
-    <link rel="icon" href="assets/favicon.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHIAOLUN LI</title>
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* ================= 基礎設定 ================= */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            display: flex; height: 100vh; background-color: #2a2a2a; color: #d1d1d1; 
-            position: relative; overflow: hidden;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        [contenteditable="true"] {
-            outline: none; padding: 2px 6px; border-radius: 4px; transition: background 0.2s, outline 0.2s; cursor: text;
-        }
-        [contenteditable="true"]:hover {
-            outline: 1px dashed rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.05);
-        }
-        [contenteditable="true"]:focus {
-            outline: 1px solid #fff; background: rgba(255, 255, 255, 0.1);
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    background: #2a2a2a;
+    color: #d1d1d1;
+    overflow: hidden;
+}
 
-        /* ================= 左側側邊欄 ================= */
-        .sidebar {
-            width: 320px; background-color: #2a2a2a; padding: 40px 20px;
-            display: flex; flex-direction: column; align-items: center; text-align: center; 
-            flex-shrink: 0; height: 100vh; overflow-y: auto; border-right: 1px solid #333; z-index: 100;
-            transition: transform 0.3s ease;
-        }
+button {
+    font: inherit;
+}
 
-        .branding { margin-bottom: 40px; width: 100%; text-align: center; }
-        .branding h1 { color: #ffffff; font-size: 24px; font-weight: 700; line-height: 1.2; margin-bottom: 8px; text-transform: uppercase; white-space: nowrap; text-align: center; cursor: pointer; user-select: none; }
-        .branding p { font-size: 14px; color: #a0a0a0; text-align: center; }
-        
-        .menu-category { 
-            font-size: 12px; letter-spacing: 1.5px; color: #888; margin-bottom: 20px; 
-            text-transform: uppercase; cursor: pointer; padding: 6px 12px; border-radius: 4px; transition: all 0.2s ease; text-align: center;
-        }
-        .menu-category:hover { color: #fff; background: rgba(255,255,255,0.1); }
-        .menu-category.active {
-            color: #ffffff !important;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.12);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-        }
+[hidden] {
+    display: none !important;
+}
 
-        .menu { width: 100%; flex-grow: 1; }
-        .menu ul { list-style: none; margin-bottom: 15px; width: 100%; }
-        
-        .menu ul li { 
-            margin-bottom: 12px; padding: 6px 8px; border-radius: 4px; transition: background 0.2s;
-            display: grid; grid-template-columns: 24px 1fr 24px; align-items: center; cursor: pointer; width: 100%;
-        }
-        .menu ul li:hover { background: rgba(255,255,255,0.05); }
-        
-        .nav-item-text { 
-            color: #aaaaaa; font-size: 14px; text-align: center; grid-column: 2;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            transition: all 0.2s ease;
-        }
-        .menu ul li:hover .nav-item-text { color: #ffffff; }
+/* 左側選單 */
+.sidebar {
+    width: 320px;
+    background: #2a2a2a;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex-shrink: 0;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid #333;
+    z-index: 100;
+    transition: transform .3s ease;
+}
 
-        /* 左側選單高亮顯示樣式 */
-        .menu ul li.active {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .menu ul li.active .nav-item-text {
-            color: #ffffff !important;
-            font-weight: bold;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
-        }
+.branding {
+    margin-bottom: 40px;
+    width: 100%;
+}
 
-        .project-order-btns { 
-            grid-column: 3; display: flex; flex-direction: column; gap: 2px; opacity: 0; transition: opacity 0.2s; align-items: center;
-        }
-        .menu ul li:hover .project-order-btns { opacity: 1; }
-        .order-btn { background: transparent; color: #888; border: none; cursor: pointer; font-size: 9px; padding: 0; line-height: 1; }
-        .order-btn:hover { color: #fff; }
+.branding h1 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    white-space: nowrap;
+}
 
-        .add-project-btn {
-            border: 1px dashed #555; color: #888; font-size: 13px; padding: 8px;
-            border-radius: 4px; cursor: pointer; transition: 0.2s; margin-bottom: 15px; width: 100%; text-align: center;
-        }
-        .add-project-btn:hover { border-color: #aaa; color: #fff; background: rgba(255,255,255,0.05); }
+.branding p {
+    font-size: 14px;
+    color: #a0a0a0;
+}
 
-        .reset-storage-btn {
-            background: transparent; color: #777; border: none; font-size: 11px;
-            cursor: pointer; transition: 0.2s; text-decoration: underline; margin-bottom: 30px; text-align: center;
-        }
-        .reset-storage-btn:hover { color: #ff5555; }
+.menu {
+    width: 100%;
+    flex-grow: 1;
+}
 
-        .about-nav-btn {
-            color: #888; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
-            cursor: pointer; padding: 6px 12px; border-radius: 4px; transition: all 0.2s ease; margin-bottom: 12px;
-        }
-        .about-nav-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
-        .about-nav-btn.active { color: #fff; font-weight: bold; background: rgba(255,255,255,0.12); text-shadow: 0 0 8px rgba(255,255,255,0.6); }
+.menu-category,
+.about-nav-btn {
+    color: #888;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: .2s;
+}
 
-        .contact-section { margin-top: auto; padding-bottom: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        .contact-title { color: #888; font-size: 14px; letter-spacing: 1px; margin-bottom: 12px; }
-        .social-icons { display: flex; gap: 16px; justify-content: center; align-items: center; }
-        .social-icon-link {
-            color: #aaa; font-size: 18px; text-decoration: none; width: 36px; height: 36px;
-            background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-        }
-        .social-icon-link:hover { color: #fff; background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+.menu-category {
+    font-size: 12px;
+    margin-bottom: 20px;
+}
 
-        /* ================= 頂部控制按鈕 ================= */
-        .top-controls {
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            display: flex; gap: 10px; align-items: center;
-        }
-        .preview-toggle-btn {
-            background: #ffffff; color: #000; border: none; padding: 10px 20px;
-            font-size: 13px; font-weight: bold; border-radius: 30px; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: 0.2s; display: none;
-        }
-        .preview-toggle-btn:hover { background: #cccccc; transform: scale(1.05); }
+.about-nav-btn {
+    font-size: 13px;
+    margin-bottom: 12px;
+}
 
-        .save-indicator {
-            font-size: 11px; color: #aaa; background: rgba(0,0,0,0.6); padding: 6px 12px; border-radius: 20px;
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .save-indicator.show { opacity: 1; }
+.menu-category:hover,
+.about-nav-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,.1);
+}
 
-        .menu-toggle-btn {
-            background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 4px;
-            width: 40px; height: 40px; display: none; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
+.menu-category.active,
+.about-nav-btn.active {
+    color: #fff;
+    font-weight: bold;
+    background: rgba(255,255,255,.12);
+    text-shadow: 0 0 8px rgba(255,255,255,.6);
+}
 
-        /* ================= 右側主內容區容器 ================= */
-        .main-content {
-            flex-grow: 1; height: 100vh; overflow-y: auto; background-color: #2a2a2a; position: relative; scroll-behavior: smooth;
-        }
+.menu ul {
+    list-style: none;
+    margin-bottom: 15px;
+    width: 100%;
+}
 
-        .gallery-view {
-            padding: 40px 2px 2px 2px; 
-            display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; gap: 2px; 
-        }
-        .gallery-item { background-color: #333; position: relative; overflow: hidden; cursor: pointer; aspect-ratio: 1 / 1; }
-        .gallery-item img.cover-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-        .overlay {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .gallery-item:hover .overlay { opacity: 1; }
-        .gallery-item:hover img.cover-img { transform: scale(1.05); }
+.menu li {
+    margin-bottom: 12px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background .2s;
+}
 
-        .project-title-grid {
-            color: #fff; font-size: 18px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; text-align: center; margin-bottom: 20px; pointer-events: none;
-        }
-        .change-cover-btn {
-            background: #ffffff; color: #000; border: none; padding: 8px 16px; font-size: 12px; font-weight: bold; border-radius: 20px; cursor: pointer; transition: 0.2s;
-        }
-        .change-cover-btn:hover { background: #ccc; }
+.nav-item-text {
+    color: #aaa;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
 
-        .delete-project-btn {
-            position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.8); color: #ff5555; 
-            border: 1px solid #555; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; 
-            font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: center; 
-            z-index: 20; opacity: 0; transition: 0.2s;
-        }
-        .gallery-item:hover .delete-project-btn { opacity: 1; }
-        .delete-project-btn:hover { background: #ff4444; color: #fff; border-color: #ff4444; }
+.menu li:hover {
+    background: rgba(255,255,255,.05);
+}
 
-        /* ================= 專案內頁編輯區 ================= */
-        .project-detail-container {
-            padding: 60px 40px; width: 100%; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.menu li:hover .nav-item-text {
+    color: #fff;
+}
 
-        .detail-header-text { margin-bottom: 60px; text-align: center; }
-        .detail-title { color: #ffffff; font-size: 36px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-        .detail-desc { color: #aaa; font-size: 16px; line-height: 1.8; max-width: 800px; margin: 0 auto; min-height: 40px; }
+.menu li.active {
+    background: rgba(255,255,255,.1);
+}
 
-        .dynamic-content-area { display: flex; flex-direction: column; width: 100%; }
+.menu li.active .nav-item-text {
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(255,255,255,.7);
+}
 
-        .content-block-item {
-            position: relative; width: 100%; margin-top: 30px; transition: margin-top 0.1s ease;
-        }
+/* 聯絡資訊 */
+.contact-section {
+    margin-top: auto;
+    padding-bottom: 20px;
+    width: 100%;
+}
 
-        /* --- 單一影音區塊 --- */
-        .media-slot {
-            width: 100%; min-height: 300px; background-color: #222; border: 2px dashed #444; border-radius: 8px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative; transition: border 0.3s; overflow: hidden;
-        }
-        .media-slot:hover { border-color: #777; }
-        .media-slot img, .media-slot video, .media-slot iframe {
-            width: 100%; height: auto; max-height: none; display: none; z-index: 1; border-radius: 4px; border: none;
-        }
-        .media-slot iframe { aspect-ratio: 16 / 9; }
-        
-        .slot-btn-group { display: flex; gap: 10px; z-index: 2; position: absolute; }
-        .upload-slot-btn, .yt-slot-btn {
-            background: #ffffff; color: #000000; border: none; padding: 10px 20px; font-size: 13px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .upload-slot-btn:hover, .yt-slot-btn:hover { background: #cccccc; transform: scale(1.05); }
+.contact-title {
+    color: #888;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
 
-        .media-slot.has-media { border: none; background-color: transparent; min-height: auto; }
-        .media-slot.has-media .slot-btn-group { opacity: 0; pointer-events: none; }
-        .media-slot.has-media:hover .slot-btn-group { opacity: 1; pointer-events: auto; }
-        .youtube-link-card { width: 100%; aspect-ratio: 16 / 9; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px; text-decoration: none; background: #111; z-index: 1; }
-        .youtube-link-card img { width: 100%; height: 100%; max-height: none; display: block; object-fit: cover; border: none; border-radius: 0; transition: transform 0.35s ease, filter 0.35s ease; }
-        .youtube-link-card::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.28); transition: background 0.25s ease; }
-        .youtube-link-card span { position: absolute; z-index: 1; padding: 11px 20px; border-radius: 24px; background: #fff; color: #000; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(0,0,0,0.45); }
-        .youtube-link-card:hover img { transform: scale(1.04); filter: brightness(0.8); }
-        .youtube-link-card:hover::after { background: rgba(0, 0, 0, 0.42); }
+.social-icons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
 
-        /* --- 多圖藝廊區塊（高度 260px、固定間距 2px、少圖時置中） --- */
-        .gallery-grid-block {
-            width: 100%; border: 2px dashed #444; border-radius: 8px; padding: 20px;
-            display: flex; flex-direction: column; align-items: center; gap: 20px; transition: 0.3s;
-        }
-        .gallery-grid-block.has-photos { border: none; padding: 0; }
-        
-        .photo-grid-container {
-            display: flex; flex-wrap: wrap; gap: 2px; width: 100%; justify-content: center;
-        }
+.social-icon-link {
+    color: #aaa;
+    font-size: 18px;
+    text-decoration: none;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s;
+}
 
-        .photo-grid-item {
-            position: relative; background: transparent; border-radius: 2px; cursor: grab; overflow: hidden;
-            height: 260px;
-            flex: 0 0 auto;
-            transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
-        }
-        .photo-grid-item:active { cursor: grabbing; }
-        .photo-grid-item.dragging { opacity: 0.4; transform: scale(0.95); }
-        .photo-grid-item.drag-over { outline: 2px dashed #ffffff; transform: scale(1.02); }
+.social-icon-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,.15);
+    transform: translateY(-2px);
+}
 
-        .photo-grid-item img {
-            width: auto; height: 100%; max-width: 100%; object-fit: contain; display: block; border-radius: 2px; transition: transform 0.3s ease;
-        }
-        .photo-grid-item:hover img { transform: scale(1.02); }
-        
-        .delete-photo-btn {
-            position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #ff5555;
-            border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer;
-            font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.2s; z-index: 10;
-        }
-        .photo-grid-item:hover .delete-photo-btn { opacity: 1; }
-        .delete-photo-btn:hover { background: #ff0000; color: #fff; }
+/* 手機選單按鈕 */
+.menu-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,.5);
+}
 
-        .add-gallery-photo-btn {
-            background: #fff; color: #000; border: none; padding: 10px 20px;
-            font-size: 13px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.2s;
-        }
-        .add-gallery-photo-btn:hover { background: #ccc; transform: scale(1.05); }
+/* 主內容 */
+.main-content {
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
 
-        /* --- 文字區塊 --- */
-        .text-block {
-            width: 100%; min-height: 60px; padding: 8px 24px; background: rgba(255,255,255,0.02); 
-            border: 1px dashed #444; border-radius: 8px; color: #ddd; line-height: 1.8; font-size: 16px; white-space: pre-line; transition: 0.2s;
-        }
-        .text-block:hover { border-color: #777; }
-        .text-block:focus { border: 1px solid #fff; background: rgba(255,255,255,0.1); outline: none; }
+.gallery-view {
+    padding: 40px 2px 2px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 2px;
+}
 
-        /* --- 軟體圖示網格 --- */
-        .tools-grid {
-            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: center; width: 100%; padding: 20px 0;
-        }
-        .tool-icon-item {
-            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
-        }
-        .tool-icon-item:hover { transform: translateY(-3px) scale(1.08); }
-        .tool-icon-item img {
-            max-width: 100%; max-height: 100%; object-fit: contain;
-        }
+.gallery-item {
+    background: #333;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 1;
+}
 
-        /* --- 回頁首 Top 按鈕 --- */
-        .back-to-top-container {
-            display: flex; justify-content: center; margin-top: 60px; padding-bottom: 20px;
-        }
-        .back-to-top-btn {
-            background: transparent; color: #aaa; border: 1px solid #555; padding: 8px 24px;
-            border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s ease;
-            letter-spacing: 1px;
-        }
-        .back-to-top-btn:hover { color: #fff; border-color: #aaa; background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+.cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s;
+}
 
-        /* --- 工具列 --- */
-        .block-toolbar {
-            position: absolute; top: -14px; left: 15px; background: rgba(0,0,0,0.85); border: 1px solid #444;
-            padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 8px; z-index: 10;
-            opacity: 0; transition: opacity 0.2s ease; font-size: 12px; color: #bbb;
-        }
-        .content-block-item:hover .block-toolbar { opacity: 1; }
-        .spacing-slider { width: 70px; cursor: pointer; accent-color: #fff; }
-        
-        .block-move-btn { background: transparent; color: #aaa; border: none; cursor: pointer; font-size: 11px; padding: 0 2px; }
-        .block-move-btn:hover { color: #fff; }
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .3s;
+}
 
-        .delete-block-btn { background: transparent; color: #ff5555; border: none; cursor: pointer; font-size: 14px; font-weight: bold; padding: 0 4px; margin-left: 4px; }
-        .delete-block-btn:hover { color: #ff0000; }
+.gallery-item:hover .overlay,
+.gallery-item:focus-visible .overlay {
+    opacity: 1;
+}
 
-        .add-content-controls {
-            display: flex; gap: 15px; justify-content: center; margin-top: 50px; 
-            padding-top: 40px; border-top: 1px dashed #333; flex-wrap: wrap;
-        }
-        .add-block-btn {
-            background: transparent; color: #aaa; border: 1px solid #555; padding: 10px 20px; 
-            border-radius: 20px; cursor: pointer; transition: 0.2s; font-size: 14px;
-        }
-        .add-block-btn:hover { background: #444; color: #fff; border-color: #888; }
+.gallery-item:hover .cover-img {
+    transform: scale(1.05);
+}
 
-        /* ================= 燈箱 (Lightbox) 彈窗 ================= */
-        .lightbox-modal {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.92); z-index: 2000; display: none;
-            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .lightbox-modal.active { display: flex; opacity: 1; }
-        
-        .lightbox-img {
-            max-width: 85vw; max-height: 85vh; object-fit: contain; border-radius: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: transform 0.2s ease;
-        }
+.project-title-grid {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 0 12px;
+}
 
-        .lightbox-btn {
-            position: absolute; background: rgba(255,255,255,0.1); color: #fff; border: none;
-            width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 24px;
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
-        }
-        .lightbox-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
-        .lightbox-close { top: 30px; right: 30px; font-size: 20px; }
-        .lightbox-prev { left: 30px; }
-        .lightbox-next { right: 30px; }
+/* 專案內頁 */
+.project-detail-container {
+    padding: 60px 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn .4s ease;
+}
 
-        /* ================= 預覽模式（對外預設呈現） ================= */
-        body.preview-mode [contenteditable="true"] { 
-            outline: none !important; 
-            background: transparent !important; 
-            user-select: none !important;
-            -webkit-user-select: none !important;
-        }
-        
-        body.preview-mode .nav-item-text { 
-            cursor: pointer !important;
-        }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        body.preview-mode .detail-title,
-        body.preview-mode .detail-desc,
-        body.preview-mode #authorName,
-        body.preview-mode #authorRole,
-        body.preview-mode .text-block { 
-            cursor: default !important; 
-            border: none !important; 
-            background: transparent !important; 
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
-        
-        body.preview-mode .photo-grid-item { cursor: pointer; }
-        body.preview-mode .add-project-btn,
-        body.preview-mode .reset-storage-btn,
-        body.preview-mode .project-order-btns,
-        body.preview-mode .change-cover-btn,
-        body.preview-mode .delete-project-btn,
-        body.preview-mode .delete-photo-btn,
-        body.preview-mode .add-gallery-photo-btn,
-        body.preview-mode .block-toolbar,
-        body.preview-mode .add-content-controls,
-        body.preview-mode .slot-btn-group { display: none !important; }
-        
-        body.preview-mode .media-slot:not(.has-media),
-        body.preview-mode .gallery-grid-block:not(.has-photos) { display: none !important; }
+.detail-header-text {
+    margin-bottom: 60px;
+    text-align: center;
+}
 
-        @media (max-width: 800px) {
-            .sidebar { position: fixed; left: -320px; top: 0; bottom: 0; transition: transform 0.3s ease; }
-            .sidebar.active { transform: translateX(320px); box-shadow: 5px 0 20px rgba(0,0,0,0.8); }
-            .menu-toggle-btn { display: flex; }
-            .gallery-view { grid-template-columns: repeat(2, 1fr); padding: 70px 10px 10px 10px; }
-            .lightbox-btn { width: 40px; height: 40px; font-size: 18px; }
-            .lightbox-prev { left: 10px; }
-            .lightbox-next { right: 10px; }
-            .photo-grid-item { height: 180px; }
-        }
-        @media (max-width: 480px) {
-            .gallery-view { grid-template-columns: 1fr; }
-            .photo-grid-item { height: 140px; }
-        }
-    </style>
+.detail-title {
+    color: #fff;
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.detail-desc {
+    color: #aaa;
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 40px;
+    white-space: pre-line;
+}
+
+.dynamic-content-area {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.content-block-item {
+    width: 100%;
+    margin-top: 30px;
+}
+
+/* 圖片與影片 */
+.media-slot {
+    width: 100%;
+    overflow: hidden;
+}
+
+.media-slot > img,
+.media-slot > video,
+.media-slot > iframe {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 0;
+    border-radius: 4px;
+}
+
+.media-slot > iframe {
+    aspect-ratio: 16 / 9;
+}
+
+.youtube-link-card {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 4px;
+    text-decoration: none;
+    background: #111;
+}
+
+.youtube-link-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .35s, filter .35s;
+}
+
+.youtube-link-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.28);
+}
+
+.youtube-link-card span {
+    position: absolute;
+    z-index: 1;
+    padding: 11px 20px;
+    border-radius: 24px;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,.45);
+}
+
+.youtube-link-card:hover img {
+    transform: scale(1.04);
+    filter: brightness(.8);
+}
+
+/* 圖片藝廊 */
+.gallery-grid-block {
+    width: 100%;
+}
+
+.photo-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    width: 100%;
+    justify-content: center;
+}
+
+.photo-grid-item {
+    position: relative;
+    border-radius: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    height: 260px;
+    max-width: 100%;
+    flex: 0 0 auto;
+}
+
+.photo-grid-item img {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: 2px;
+    transition: transform .3s;
+}
+
+.photo-grid-item:hover img {
+    transform: scale(1.02);
+}
+
+/* 文字 */
+.text-block {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px 0;
+    color: #ddd;
+    line-height: 1.8;
+    font-size: 16px;
+    white-space: pre-line;
+}
+
+/* 軟體圖示 */
+.tools-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.tool-icon-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .2s;
+}
+
+.tool-icon-item:hover {
+    transform: translateY(-3px) scale(1.08);
+}
+
+.tool-icon-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* 回到頁首 */
+.back-to-top-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+    padding-bottom: 20px;
+}
+
+.back-to-top-btn {
+    background: transparent;
+    color: #aaa;
+    border: 1px solid #555;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: .2s;
+}
+
+.back-to-top-btn:hover {
+    color: #fff;
+    border-color: #aaa;
+    background: rgba(255,255,255,.05);
+    transform: translateY(-2px);
+}
+
+/* 圖片燈箱 */
+.lightbox-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.92);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-img {
+    max-width: 85vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.8);
+}
+
+.lightbox-btn {
+    position: absolute;
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    border: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s;
+}
+
+.lightbox-btn:hover {
+    background: rgba(255,255,255,.3);
+    transform: scale(1.1);
+}
+
+.lightbox-close {
+    top: 30px;
+    right: 30px;
+    font-size: 20px;
+}
+
+.lightbox-prev {
+    left: 30px;
+}
+
+.lightbox-next {
+    right: 30px;
+}
+
+:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+}
+
+/* 響應式版面 */
+@media (max-width: 800px) {
+    .sidebar {
+        position: fixed;
+        left: -320px;
+        top: 0;
+        bottom: 0;
+    }
+
+    .sidebar.active {
+        transform: translateX(320px);
+        box-shadow: 5px 0 20px rgba(0,0,0,.8);
+    }
+
+    .menu-toggle-btn {
+        display: flex;
+    }
+
+    .gallery-view {
+        grid-template-columns: repeat(2,1fr);
+        padding: 70px 10px 10px;
+    }
+
+    .lightbox-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .lightbox-prev {
+        left: 10px;
+    }
+
+    .lightbox-next {
+        right: 10px;
+    }
+
+    .photo-grid-item {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-view {
+        grid-template-columns: 1fr;
+    }
+
+    .photo-grid-item {
+        height: 140px;
+    }
+}
+/* Evernight：等高、保持比例，整組與影片同寬 */
+.project-detail-container[data-id="item-evernight"] .gallery-grid-block {
+    container-type: inline-size;
+}
+
+.project-detail-container[data-id="item-evernight"] .photo-grid-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 2px;
+}
+
+.project-detail-container[data-id="item-evernight"] .photo-grid-item {
+    flex: 0 0 auto;
+    width: auto;
+    height: calc((100cqi - 4px) / 2.142679664) !important;
+    aspect-ratio: auto !important;
+}
+
+.project-detail-container[data-id="item-evernight"] .photo-grid-item img {
+    display: block;
+    width: auto;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+}
+</style>
 </head>
-<body class="preview-mode">
 
-    <div class="top-controls">
-        <span class="save-indicator" id="saveIndicator">✓ 已自動儲存</span>
-        <div class="menu-toggle-btn" id="menuToggleBtn">☰</div>
-        <button class="preview-toggle-btn" id="previewToggleBtn">✏️ 切換編輯模式</button>
+<body>
+
+<button
+    class="menu-toggle-btn"
+    id="menuToggleBtn"
+    type="button"
+    aria-label="Toggle menu"
+    aria-controls="sidebar"
+    aria-expanded="false"
+>☰</button>
+
+<div
+    class="lightbox-modal"
+    id="lightboxModal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Image gallery"
+    hidden
+>
+    <button
+        class="lightbox-btn lightbox-close"
+        id="lightboxClose"
+        type="button"
+        aria-label="Close gallery"
+    >✕</button>
+
+    <button
+        class="lightbox-btn lightbox-prev"
+        id="lightboxPrev"
+        type="button"
+        aria-label="Previous image"
+    >‹</button>
+
+    <img class="lightbox-img" id="lightboxImg" alt="">
+
+    <button
+        class="lightbox-btn lightbox-next"
+        id="lightboxNext"
+        type="button"
+        aria-label="Next image"
+    >›</button>
+</div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="branding">
+        <h1 id="authorName">CHIAO-LUN LI</h1>
+        <p id="authorRole">Animator/2D Artist</p>
     </div>
 
-    <!-- 全螢幕燈箱 Modal -->
-    <div class="lightbox-modal" id="lightboxModal">
-        <button class="lightbox-btn lightbox-close" id="lightboxClose">✕</button>
-        <button class="lightbox-btn lightbox-prev" id="lightboxPrev">‹</button>
-        <img src="" class="lightbox-img" id="lightboxImg">
-        <button class="lightbox-btn lightbox-next" id="lightboxNext">›</button>
+    <nav class="menu">
+        <div class="menu-category active" id="workHomeBtn" title="Home">
+            WORKS
+        </div>
+        <ul id="menuList"></ul>
+    </nav>
+
+    <div class="about-nav-btn" id="aboutBtn" title="About">
+        ABOUT
     </div>
 
-    <input type="file" id="coverUploader" accept="image/*" style="display: none;">
-    <input type="file" id="mediaUploader" accept="image/*, video/*" style="display: none;">
-    <input type="file" id="galleryPhotosUploader" accept="image/*" multiple style="display: none;">
-
-    <aside class="sidebar" id="sidebar">
-        <div class="branding">
-            <h1 id="authorName" contenteditable="false" data-was-editable="true">CHIAO-LUN LI</h1>
-            <p id="authorRole" contenteditable="false" data-was-editable="true">Animator/2D Artist</p>
-        </div>
-
-        <nav class="menu">
-            <div class="menu-category active" id="workHomeBtn" title="Home">WORKS</div>
-            <ul id="menuList"></ul>
-            <div class="add-project-btn" id="addProjectBtn">+ 新增專案</div>
-            <button class="reset-storage-btn" id="resetStorageBtn">重置回復預設預覽</button>
-        </nav>
-
-        <div class="about-nav-btn" id="aboutBtn" title="About">ABOUT</div>
-
-        <div class="contact-section">
-            <div class="contact-title">Contact</div>
-            <div class="social-icons">
-                <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon-link" title="LinkedIn">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a href="mailto:minkky8@gmail.com" class="social-icon-link" title="Send Email">
-                    <i class="fas fa-envelope"></i>
-                </a>
-            </div>
-        </div>
-    </aside>
-
-    <div class="main-content" id="mainContent">
-        <main class="gallery-view" id="galleryView"></main>
-        <div id="allProjectsDetails"></div>
-
-        <!-- ABOUT 靜態頁面區塊 -->
-        <div class="project-detail-container" id="aboutSection" style="display: none;">
-            <div class="detail-header-text" style="margin-bottom: 0;">
-                <h1 class="detail-title">ABOUT</h1>
-            </div>
-
-            <div class="dynamic-content-area">
-                <div class="content-block-item" style="margin-top: 80px;">
-                    <div class="text-block">
-                        Hi, I’m Chiao-Lun Li, a visual artist specializing in 2D animation and game art development. Known for strong artistic versatility, my work spans animated series, commercial storyboards, Slot & Fish Game VFX/motion design, and character concepts. From high-intensity combat VFX and dynamic pacing to warm, stylized illustrations, I bring ideas to life across diverse aesthetic styles.<br><br>
-                        Beyond digital creation, I have a passion for bringing my original character designs into the physical world—handcrafting unique jewelry using metalsmithing, clay sculpting, and wax carving techniques (featured below).
-                    </div>
-                </div>
-
-                <div class="content-block-item" style="margin-top: 50px;">
-                    <div class="gallery-grid-block has-photos">
-                        <div class="photo-grid-container" id="aboutGalleryContainer">
-                            <div class="photo-grid-item"><img src="assets/others/pic_01.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_02.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_03.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_04.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_05.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_06.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_07.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_08.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_09.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_10.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_11.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_12.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_13.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_14.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_15.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_16.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/pic_17.png" alt=""></div>
-                            <div class="photo-grid-item"><img src="assets/others/IMGraa.png" alt=""></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-block-item" style="margin-top: 60px;">
-                    <div style="text-align: center; color: #ffffff; font-size: 20px; font-weight: 300; letter-spacing: 2px; margin-bottom: 25px;">SOFTWARE & TOOLS</div>
-                    <div class="tools-grid">
-                        <div class="tool-icon-item" title="Photoshop"><img src="assets/icon/ic_ps.png" alt="Photoshop"></div>
-                        <div class="tool-icon-item" title="After Effects"><img src="assets/icon/ic_ae.png" alt="After Effects"></div>
-                        <div class="tool-icon-item" title="Illustrator"><img src="assets/icon/ic_ai.png" alt="Illustrator"></div>
-                        <div class="tool-icon-item" title="Spine 2D"><img src="assets/icon/ic_spine.png" alt="Spine 2D"></div>
-                        <div class="tool-icon-item" title="Clip Studio Paint"><img src="assets/icon/ic_clp.png" alt="Clip Studio Paint"></div>
-                        <div class="tool-icon-item" title="Procreate"><img src="assets/icon/ic_procreate.png" alt="Procreate"></div>
-                        <div class="tool-icon-item" title="Blender"><img src="assets/icon/ic_blender.png" alt="Blender"></div>
-                        <div class="tool-icon-item" title="Figma"><img src="assets/icon/ic_fig.png" alt="Figma"></div>
-                        <div class="tool-icon-item" title="Figma"><img src="assets/icon/ic_sb.png" alt="StoryPro"></div>
-                        <div class="tool-icon-item" title="Figma"><img src="assets/icon/ic_harmony.png" alt="Harmony"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="back-to-top-container">
-                <button class="back-to-top-btn">▲ TOP</button>
-            </div>
+    <div class="contact-section">
+        <div class="contact-title">Contact</div>
+        <div class="social-icons">
+            <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="social-icon-link"
+                title="LinkedIn"
+            >
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a
+                href="mailto:minkky8@gmail.com"
+                class="social-icon-link"
+                title="Send Email"
+            >
+                <i class="fas fa-envelope"></i>
+            </a>
         </div>
     </div>
+</aside>
 
-    <script>
-        const STORAGE_KEY = 'PORTFOLIO_DATA_STORAGE';
-        
-        const sidebar = document.getElementById('sidebar');
-        const menuToggleBtn = document.getElementById('menuToggleBtn');
-        const previewToggleBtn = document.getElementById('previewToggleBtn');
-        const saveIndicator = document.getElementById('saveIndicator');
-        const resetStorageBtn = document.getElementById('resetStorageBtn');
-        
-        const authorName = document.getElementById('authorName');
-        const authorRole = document.getElementById('authorRole');
-        
-        const menuList = document.getElementById('menuList');
-        const galleryView = document.getElementById('galleryView');
-        const allProjectsDetails = document.getElementById('allProjectsDetails');
-        const workHomeBtn = document.getElementById('workHomeBtn');
-        const aboutBtn = document.getElementById('aboutBtn');
-        const aboutSection = document.getElementById('aboutSection');
-        const addProjectBtn = document.getElementById('addProjectBtn');
-        
-        const coverUploader = document.getElementById('coverUploader');
-        const mediaUploader = document.getElementById('mediaUploader');
-        const galleryPhotosUploader = document.getElementById('galleryPhotosUploader');
+<div class="main-content" id="mainContent">
+    <main class="gallery-view" id="galleryView"></main>
+    <div id="allProjectsDetails"></div>
 
-        const lightboxModal = document.getElementById('lightboxModal');
-        const lightboxImg = document.getElementById('lightboxImg');
-        const lightboxClose = document.getElementById('lightboxClose');
-        const lightboxPrev = document.getElementById('lightboxPrev');
-        const lightboxNext = document.getElementById('lightboxNext');
+    <div class="project-detail-container" id="aboutSection" hidden>
+        <div class="detail-header-text" style="margin-bottom: 0;">
+            <h1 class="detail-title">ABOUT</h1>
+        </div>
 
-        let projectCount = 0;
-        let activeCoverItem = null; 
-        let activeUploadSlot = null; 
-        let activeGalleryBlock = null;
-        let isPreviewMode = true;
-        let saveTimeout = null;
-        let titleClickCount = 0;
-        let titleClickTimer = null;
-        let currentGalleryImages = [];
-        let currentImageIndex = 0;
-
-        // 連擊左上角標題 3 下觸發解鎖編輯按鈕
-        authorName.addEventListener('click', () => {
-            titleClickCount++;
-            clearTimeout(titleClickTimer);
-            if (titleClickCount >= 3) {
-                previewToggleBtn.style.display = 'block';
-                alert('🔓 已開啟控制按鈕！點擊右上角的「切換編輯模式」即可進行修訂。');
-                titleClickCount = 0;
-            } else {
-                titleClickTimer = setTimeout(() => { titleClickCount = 0; }, 1000);
-            }
-        });
-
-        function triggerAutoSave() {
-            clearTimeout(saveTimeout);
-            saveDataToLocalStorage();
-            saveIndicator.classList.add('show');
-            saveTimeout = setTimeout(() => {
-                saveIndicator.classList.remove('show');
-            }, 1500);
-        }
-
-        menuToggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
-        previewToggleBtn.addEventListener('click', () => {
-            if (document.activeElement && document.activeElement.blur) {
-                document.activeElement.blur();
-            }
-            saveDataToLocalStorage();
-
-            isPreviewMode = !isPreviewMode;
-            document.body.classList.toggle('preview-mode', isPreviewMode);
-            
-            const editables = document.querySelectorAll('[data-was-editable="true"]');
-            editables.forEach(el => {
-                if (isPreviewMode) {
-                    el.setAttribute('contenteditable', 'false');
-                } else {
-                    el.setAttribute('contenteditable', 'true');
-                }
-            });
-
-            if (isPreviewMode) {
-                previewToggleBtn.innerHTML = "✏️ 開啟編輯";
-                previewToggleBtn.style.background = "#fff";
-                previewToggleBtn.style.color = "#000";
-                sidebar.classList.remove('active');
-            } else {
-                previewToggleBtn.innerHTML = "👁 完成並鎖定預覽";
-                previewToggleBtn.style.background = "#333";
-                previewToggleBtn.style.color = "#fff";
-            }
-        });
-
-        authorName.addEventListener('input', triggerAutoSave);
-        authorRole.addEventListener('input', triggerAutoSave);
-
-        function extractYouTubeId(url) {
-            if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
-        function extractVimeoId(url) {
-            if (!url) return null;
-            const regExp = /^.*(vimeo\.com\/)((channels\/[a-zA-Z0-9]+\/)|(groups\/[a-zA-Z0-9]+\/videos\/)|(album\/[0-9]+\/video\/)|(video\/))?([0-9]+)/;
-            const match = url.match(regExp);
-            return match ? match[7] : null;
-        }
-
-        function createProject(title, customId = null, coverSrc = null, descText = null, blocksData = []) {
-            projectCount++;
-            const id = customId || `item-${projectCount}`;
-
-            const li = document.createElement('li');
-            li.setAttribute('data-id', id);
-            
-            const span = document.createElement('span');
-            span.className = 'nav-item-text';
-            span.setAttribute('contenteditable', isPreviewMode ? 'false' : 'true');
-            span.setAttribute('data-was-editable', 'true');
-            span.innerText = title;
-
-            const orderBtns = document.createElement('div');
-            orderBtns.className = 'project-order-btns';
-            orderBtns.innerHTML = `
-                <button class="order-btn up-btn" title="向上移動">▲</button>
-                <button class="order-btn down-btn" title="向下移動">▼</button>
-            `;
-
-            const spacer = document.createElement('div');
-
-            li.appendChild(spacer);
-            li.appendChild(span);
-            li.appendChild(orderBtns);
-
-            orderBtns.querySelector('.up-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (li.previousElementSibling) {
-                    menuList.insertBefore(li, li.previousElementSibling);
-                    syncGridOrder();
-                    triggerAutoSave();
-                }
-            });
-
-            orderBtns.querySelector('.down-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (li.nextElementSibling) {
-                    menuList.insertBefore(li.nextElementSibling, li);
-                    syncGridOrder();
-                    triggerAutoSave();
-                }
-            });
-
-            span.addEventListener('input', function() {
-                const newTitle = this.innerText;
-                const gridTitle = document.querySelector(`.gallery-item[data-id="${id}"] .project-title-grid`);
-                if (gridTitle) gridTitle.innerText = newTitle;
-
-                const detailTitle = document.querySelector(`.project-detail-container[data-id="${id}"] .detail-title`);
-                if (detailTitle) detailTitle.innerText = newTitle;
-                triggerAutoSave();
-            });
-
-            li.addEventListener('click', function(e) {
-                if (e.target.classList.contains('order-btn') || (e.target.isContentEditable && !isPreviewMode)) return;
-                openDetailView(id);
-                sidebar.classList.remove('active');
-            });
-
-            menuList.appendChild(li);
-
-            const defaultCover = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop";
-            const gridItem = document.createElement('div');
-            gridItem.className = 'gallery-item';
-            gridItem.setAttribute('data-id', id);
-            gridItem.innerHTML = `
-                <img class="cover-img" src="${coverSrc || defaultCover}" alt="專案封面">
-                <button class="delete-project-btn" title="刪除此專案">✕</button>
-                <div class="overlay">
-                    <div class="project-title-grid">${title}</div>
-                    <button class="change-cover-btn">更換圖片</button>
+        <div class="dynamic-content-area">
+            <div class="content-block-item" style="margin-top: 80px;">
+                <div class="text-block">
+                    Hi, I’m Chiao-Lun Li, a 2D Artist and Animator with over 10 years of experience in animation and game art. My work spans TV series, films, commercials, character animation, storyboarding, character design, and game VFX. From expressive character performances to dynamic visual effects, I enjoy bringing ideas to life through movement, storytelling, and diverse visual styles.
+                    Beyond digital art, I also explore bringing my original characters into the physical world through metalsmithing, clay sculpting, and wax carving—creating unique wearable art and sculptural objects.
                 </div>
-            `;
+            </div>
 
-            gridItem.querySelector('.delete-project-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                if(confirm(`確定要刪除專案「${span.innerText}」嗎？`)) {
-                    li.remove();
-                    gridItem.remove();
-                    const detailItem = document.querySelector(`.project-detail-container[data-id="${id}"]`);
-                    if(detailItem) detailItem.remove();
-                    galleryView.style.display = 'grid';
-                    workHomeBtn.classList.add('active');
-                    triggerAutoSave();
-                }
-            });
-
-            gridItem.addEventListener('click', () => openDetailView(id));
-            gridItem.querySelector('.change-cover-btn').addEventListener('click', function(e) {
-                e.stopPropagation(); 
-                activeCoverItem = gridItem; 
-                coverUploader.click(); 
-            });
-            galleryView.appendChild(gridItem);
-
-            const detailContainer = document.createElement('div');
-            detailContainer.className = 'project-detail-container';
-            detailContainer.setAttribute('data-id', id);
-            detailContainer.style.display = 'none';
-            
-            const hideSubtitle = descText === "__HIDE_SUBTITLE__";
-            const formattedDesc = hideSubtitle ? "" : (descText !== null ? descText : "");
-            detailContainer.innerHTML = `
-                <div class="detail-header-text${hideSubtitle ? ' no-subtitle' : ''}">
-                    <h1 class="detail-title" contenteditable="${isPreviewMode ? 'false' : 'true'}" data-was-editable="true">${title}</h1>
-                    ${hideSubtitle ? '' : `<div class="detail-desc" contenteditable="${isPreviewMode ? 'false' : 'true'}" data-was-editable="true">${formattedDesc}</div>`}
+            <div class="content-block-item" style="margin-top: 50px;">
+                <div class="gallery-grid-block">
+                    <div class="photo-grid-container" id="aboutGalleryContainer">
+                        <div class="photo-grid-item"><img src="assets/others/pic_01.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_02.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_03.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_04.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_05.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_06.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_07.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_08.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_09.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_10.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_11.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_12.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_13.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_14.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_15.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_16.png" alt=""></div>
+                        <div class="photo-grid-item"><img src="assets/others/pic_17.png" alt=""></div>
+                    </div>
                 </div>
-                
-                <div class="dynamic-content-area"></div>
-                
-                <div class="add-content-controls">
-                    <button class="add-media-btn add-block-btn">+ 新增單一圖片 / 影片</button>
-                    <button class="add-gallery-btn add-block-btn">+ 新增圖片藝廊區塊</button>
-                    <button class="add-text-btn add-block-btn">+ 新增文字說明</button>
+            </div>
+
+            <div class="content-block-item" style="margin-top: 60px;">
+                <div style="text-align: center; color: #fff; font-size: 20px; font-weight: 300; letter-spacing: 2px; margin-bottom: 25px;">
+                    SOFTWARE &amp; TOOLS
                 </div>
 
-                <!-- 內頁最下方 Top 按鈕 -->
-                <div class="back-to-top-container">
-                    <button class="back-to-top-btn">▲ TOP</button>
+                <div class="tools-grid">
+                    <div class="tool-icon-item" title="Photoshop"><img src="assets/icon/ic_ps.png" alt="Photoshop"></div>
+                    <div class="tool-icon-item" title="After Effects"><img src="assets/icon/ic_ae.png" alt="After Effects"></div>
+                    <div class="tool-icon-item" title="Illustrator"><img src="assets/icon/ic_ai.png" alt="Illustrator"></div>
+                    <div class="tool-icon-item" title="Spine 2D"><img src="assets/icon/ic_spine.png" alt="Spine 2D"></div>
+                    <div class="tool-icon-item" title="Clip Studio Paint"><img src="assets/icon/ic_clp.png" alt="Clip Studio Paint"></div>
+                    <div class="tool-icon-item" title="Procreate"><img src="assets/icon/ic_procreate.png" alt="Procreate"></div>
+                    <div class="tool-icon-item" title="Blender"><img src="assets/icon/ic_blender.png" alt="Blender"></div>
+                    <div class="tool-icon-item" title="Figma"><img src="assets/icon/ic_fig.png" alt="Figma"></div>
+                    <div class="tool-icon-item" title="StoryPro"><img src="assets/icon/ic_sb.png" alt="StoryPro"></div>
+                    <div class="tool-icon-item" title="Harmony"><img src="assets/icon/ic_harmony.png" alt="Harmony"></div>
                 </div>
-            `;
-            
-            detailContainer.querySelector('.back-to-top-btn').addEventListener('click', () => {
-                document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            </div>
+        </div>
 
-            const dynamicArea = detailContainer.querySelector('.dynamic-content-area');
+        <div class="back-to-top-container">
+            <button class="back-to-top-btn" type="button">▲ TOP</button>
+        </div>
+    </div>
+</div>
 
-            const detailTitleEl = detailContainer.querySelector('.detail-title');
-            detailTitleEl.addEventListener('input', function() {
-                const newTitle = this.innerText;
-                span.innerText = newTitle;
-                const gridTitle = document.querySelector(`.gallery-item[data-id="${id}"] .project-title-grid`);
-                if (gridTitle) gridTitle.innerText = newTitle;
-                triggerAutoSave();
-            });
-
-            const detailDescEl = detailContainer.querySelector('.detail-desc');
-            if (detailDescEl) detailDescEl.addEventListener('input', triggerAutoSave);
-
-            function addBlockToArea(contentElement, marginTop = '30px') {
-                const blockItem = document.createElement('div');
-                blockItem.className = 'content-block-item';
-                blockItem.style.marginTop = marginTop;
-
-                const toolbar = document.createElement('div');
-                toolbar.className = 'block-toolbar';
-                const sliderVal = parseInt(marginTop) || 30;
-                toolbar.innerHTML = `
-                    <span>間距</span>
-                    <input type="range" class="spacing-slider" min="0" max="100" value="${sliderVal}">
-                    <button class="block-move-btn block-up-btn" title="上移區塊">▲</button>
-                    <button class="block-move-btn block-down-btn" title="向下移動">▼</button>
-                    <button class="delete-block-btn" title="刪除此區塊">✕</button>
-                `;
-
-                const slider = toolbar.querySelector('.spacing-slider');
-                slider.addEventListener('input', (e) => {
-                    blockItem.style.marginTop = `${e.target.value}px`;
-                    triggerAutoSave();
-                });
-
-                toolbar.querySelector('.block-up-btn').addEventListener('click', () => {
-                    if (blockItem.previousElementSibling) {
-                        dynamicArea.insertBefore(blockItem, blockItem.previousElementSibling);
-                        triggerAutoSave();
-                    }
-                });
-
-                toolbar.querySelector('.block-down-btn').addEventListener('click', () => {
-                    if (blockItem.nextElementSibling) {
-                        dynamicArea.insertBefore(blockItem.nextElementSibling, blockItem);
-                        triggerAutoSave();
-                    }
-                });
-
-                toolbar.querySelector('.delete-block-btn').addEventListener('click', () => {
-                    blockItem.remove();
-                    triggerAutoSave();
-                });
-
-                blockItem.appendChild(toolbar);
-                blockItem.appendChild(contentElement);
-                dynamicArea.appendChild(blockItem);
+<script>
+const projects = [
+    {
+        id: "item-1",
+        title: "Animation Showreel",
+        coverSrc: "assets/covers/cover_show.png",
+        descText: "Showcase of 2D animation and game VFX, highlighting a versatile adaptability across diverse art stylesfrom anime and stylized designs to commercial aesthetics.",
+        blocks: [
+            {
+                type: "text",
+                text: "Includes animated projects across TV series, feature films, commercials, short films, and music videos.",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/WwUb8YPPIrI?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "0px"
+            },
+            {
+                type: "text",
+                text: "Specializing in the seamless integration of dynamic character animation and game visual effects (VFX).",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/yWMpS69BGuw?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "0px"
             }
-
-            blocksData.forEach(block => {
-                if (block.type === 'media') {
-                    const slot = createMediaSlotElement(block.mediaSrc, block.mediaType);
-                    addBlockToArea(slot, block.marginTop);
-                } else if (block.type === 'gallery') {
-                    const galleryBlock = createGalleryGridBlockElement(block.images);
-                    addBlockToArea(galleryBlock, block.marginTop);
-                } else if (block.type === 'text') {
-                    const textBlock = createTextBlockElement(block.text);
-                    addBlockToArea(textBlock, block.marginTop);
-                }
-            });
-
-            detailContainer.querySelector('.add-media-btn').addEventListener('click', () => {
-                const slot = createMediaSlotElement();
-                addBlockToArea(slot);
-                triggerAutoSave();
-            });
-
-            detailContainer.querySelector('.add-gallery-btn').addEventListener('click', () => {
-                const galleryBlock = createGalleryGridBlockElement();
-                addBlockToArea(galleryBlock);
-                triggerAutoSave();
-            });
-
-            detailContainer.querySelector('.add-text-btn').addEventListener('click', () => {
-                const textBlock = createTextBlockElement();
-                addBlockToArea(textBlock);
-                triggerAutoSave();
-            });
-
-            allProjectsDetails.appendChild(detailContainer);
-        }
-
-        function syncGridOrder() {
-            const lis = document.querySelectorAll('#menuList li');
-            lis.forEach(li => {
-                const id = li.getAttribute('data-id');
-                const gridItem = document.querySelector(`.gallery-item[data-id="${id}"]`);
-                if (gridItem) {
-                    galleryView.appendChild(gridItem);
-                }
-            });
-        }
-
-        function placeStoryboardBeforeIllustration() {
-            const projects = Array.from(menuList.querySelectorAll('li'));
-            const storyboard = projects.find(item => item.querySelector('.nav-item-text')?.innerText.trim() === 'Storyboard');
-            const illustration = projects.find(item => item.querySelector('.nav-item-text')?.innerText.trim() === 'Illustration');
-            if (storyboard && illustration && storyboard !== illustration.previousElementSibling) {
-                menuList.insertBefore(storyboard, illustration);
-                syncGridOrder();
+        ]
+    },
+    {
+        id: "item-2",
+        title: "VFX/Motion Design",
+        coverSrc: "assets/covers/cover_vfx.png",
+        descText: "A showcasing of motion design and visual effects for Slot and Fishing games. Features include character animation, high-impact win/bonus VFX, dynamic loading scenes, and promotional motion banners. Designed to evoke strong visual impact and smooth responsiveness, enhancing overall player engagement.",
+        blocks: [
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/NLLZIDt6P_A?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://player.vimeo.com/video/1223922848",
+                mediaType: "vimeo",
+                marginTop: "37px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://player.vimeo.com/video/1223922847",
+                mediaType: "vimeo",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://player.vimeo.com/video/1223922836",
+                mediaType: "vimeo",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/9_QsZuRF4A4?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "39px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://player.vimeo.com/video/1223922837",
+                mediaType: "vimeo",
+                marginTop: "13px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://player.vimeo.com/video/1223922838",
+                mediaType: "vimeo",
+                marginTop: "9px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/DRoo6UMWPRA?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/cc1HCO5aScc?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "26px"
             }
-        }
-
-        function createMediaSlotElement(mediaSrc = '', mediaType = '') {
-            const slot = document.createElement('div');
-            slot.className = 'media-slot';
-            if (mediaSrc) slot.classList.add('has-media');
-
-            const isVid = mediaType === 'video';
-            const isYt = mediaType === 'youtube';
-            const isVimeo = mediaType === 'vimeo';
-            const isYouTubeLink = mediaType === 'youtube-link';
-            if (mediaType) slot.setAttribute('data-media-type', mediaType);
-
-            let embedUrl = '';
-            if (isYt && mediaSrc) {
-                const vidId = extractYouTubeId(mediaSrc) || mediaSrc;
-                embedUrl = `https://www.youtube.com/embed/${vidId}?enablejsapi=1`;
-            } else if (isVimeo && mediaSrc) {
-                const vidId = extractVimeoId(mediaSrc) || mediaSrc;
-                embedUrl = `https://player.vimeo.com/video/${vidId}`;
+        ]
+    },
+    {
+        id: "item-3",
+        title: "Game Art Design",
+        coverSrc: "assets/covers/cover_game.png",
+        descText: "Comprehensive game art design spanning characters, assets, UI, background art, and promotional banners.",
+        blocks: [
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/items1.png",
+                mediaType: "image",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/items2.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/items3.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/items4.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/items5.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/banners1.jpg",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/banners2.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/logos.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/game_art/ui.png",
+                mediaType: "image",
+                marginTop: "30px"
             }
-
-            const youtubeId = isYouTubeLink ? extractYouTubeId(mediaSrc) : null;
-            const youtubeLinkHtml = isYouTubeLink && youtubeId ? `<a class="youtube-link-card" href="${mediaSrc}" target="_blank" rel="noopener noreferrer" aria-label="Watch on YouTube"><img src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" alt="YouTube video thumbnail"><span>Watch on YouTube ↗</span></a>` : '';
-            slot.innerHTML = `
-                <img class="preview-img" src="${!isVid && !isYt && !isVimeo && !isYouTubeLink ? mediaSrc : ''}" style="display: ${!isVid && !isYt && !isVimeo && !isYouTubeLink && mediaSrc ? 'block' : 'none'};">
-                <video class="preview-vid" controls src="${isVid ? mediaSrc : ''}" style="display: ${isVid && mediaSrc ? 'block' : 'none'};"></video>
-                <iframe class="preview-yt" src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="display: ${(isYt || isVimeo) && mediaSrc ? 'block' : 'none'};"></iframe>
-                ${youtubeLinkHtml}
-                <div class="slot-btn-group">
-                    <button class="upload-slot-btn">${mediaSrc ? '更換圖片/影片' : '上傳本地圖片或影片'}</button>
-                    <button class="yt-slot-btn">${(isYt || isVimeo) ? '更換線上影片網址' : '嵌入 YouTube / Vimeo 網址'}</button>
-                </div>
-            `;
-
-            slot.querySelector('.upload-slot-btn').addEventListener('click', function() {
-                activeUploadSlot = slot; 
-                mediaUploader.click(); 
-            });
-
-            slot.querySelector('.yt-slot-btn').addEventListener('click', function() {
-                const inputUrl = prompt("請貼上 YouTube 或 Vimeo 影片網址：");
-                if (inputUrl) {
-                    const ytId = extractYouTubeId(inputUrl);
-                    const vimeoId = extractVimeoId(inputUrl);
-                    
-                    const imgEl = slot.querySelector('.preview-img');
-                    const vidEl = slot.querySelector('.preview-vid');
-                    const iframeEl = slot.querySelector('.preview-yt');
-
-                    imgEl.style.display = 'none';
-                    vidEl.style.display = 'none';
-                    vidEl.pause();
-
-                    if (ytId) {
-                        iframeEl.src = `https://www.youtube.com/embed/${ytId}?enablejsapi=1`;
-                        iframeEl.style.display = 'block';
-                        slot.classList.add('has-media');
-                        slot.setAttribute('data-media-type', 'youtube');
-                        triggerAutoSave();
-                    } else if (vimeoId) {
-                        iframeEl.src = `https://player.vimeo.com/video/${vimeoId}`;
-                        iframeEl.style.display = 'block';
-                        slot.classList.add('has-media');
-                        slot.setAttribute('data-media-type', 'vimeo');
-                        triggerAutoSave();
-                    } else {
-                        alert("解析失敗！請確認貼上的是完整的 YouTube 或 Vimeo 網址。");
-                    }
-                }
-            });
-
-            return slot;
-        }
-
-        function createGalleryGridBlockElement(imagesData = []) {
-            const block = document.createElement('div');
-            block.className = 'gallery-grid-block';
-            if (imagesData.length > 0) block.classList.add('has-photos');
-
-            const gridContainer = document.createElement('div');
-            gridContainer.className = 'photo-grid-container';
-
-            const addPhotoBtn = document.createElement('button');
-            addPhotoBtn.className = 'add-gallery-photo-btn';
-            addPhotoBtn.innerText = '+ 新增照片至藝廊';
-            addPhotoBtn.addEventListener('click', () => {
-                activeGalleryBlock = block;
-                galleryPhotosUploader.click();
-            });
-
-            imagesData.forEach(src => {
-                addPhotoToGalleryGrid(gridContainer, src, block);
-            });
-
-            block.appendChild(gridContainer);
-            block.appendChild(addPhotoBtn);
-            return block;
-        }
-
-        function addPhotoToGalleryGrid(container, src, galleryBlock) {
-            const item = document.createElement('div');
-            item.className = 'photo-grid-item';
-            item.setAttribute('draggable', 'true');
-
-            const img = document.createElement('img');
-            img.src = src;
-
-            // 載入圖片後設定 aspect-ratio
-            img.onload = function() {
-                if (this.naturalWidth && this.naturalHeight) {
-                    item.style.aspectRatio = `${this.naturalWidth} / ${this.naturalHeight}`;
-                }
-            };
-
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-photo-btn';
-            deleteBtn.innerHTML = '✕';
-            deleteBtn.title = '刪除此照片';
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                item.remove();
-                if (container.children.length === 0) {
-                    galleryBlock.classList.remove('has-photos');
-                }
-                triggerAutoSave();
-            });
-
-            item.addEventListener('dragstart', (e) => {
-                if (isPreviewMode) return;
-                draggedItem = item;
-                item.classList.add('dragging');
-                e.dataTransfer.effectAllowed = 'move';
-            });
-
-            item.addEventListener('dragend', () => {
-                item.classList.remove('dragging');
-                container.querySelectorAll('.photo-grid-item').forEach(i => i.classList.remove('drag-over'));
-                draggedItem = null;
-                triggerAutoSave();
-            });
-
-            item.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                if (isPreviewMode || !draggedItem || draggedItem === item) return;
-                item.classList.add('drag-over');
-            });
-
-            item.addEventListener('dragleave', () => {
-                item.classList.remove('drag-over');
-            });
-
-            item.addEventListener('drop', (e) => {
-                e.preventDefault();
-                item.classList.remove('drag-over');
-                if (isPreviewMode || !draggedItem || draggedItem === item) return;
-
-                const children = Array.from(container.children);
-                const draggedIndex = children.indexOf(draggedItem);
-                const targetIndex = children.indexOf(item);
-
-                if (draggedIndex < targetIndex) {
-                    container.insertBefore(draggedItem, item.nextSibling);
-                } else {
-                    container.insertBefore(draggedItem, item);
-                }
-            });
-
-            item.addEventListener('click', () => {
-                const allImgs = Array.from(container.querySelectorAll('img')).map(i => i.src);
-                const index = allImgs.indexOf(img.src);
-                openLightbox(allImgs, index);
-            });
-
-            item.appendChild(img);
-            item.appendChild(deleteBtn);
-            container.appendChild(item);
-            galleryBlock.classList.add('has-photos');
-        }
-
-        function initAboutGalleryLightbox() {
-            const container = document.getElementById('aboutGalleryContainer');
-            if (!container) return;
-            const items = container.querySelectorAll('.photo-grid-item');
-            items.forEach((item) => {
-                const img = item.querySelector('img');
-                img.onload = function() {
-                    if (this.naturalWidth && this.naturalHeight) {
-                        item.style.aspectRatio = `${this.naturalWidth} / ${this.naturalHeight}`;
-                    }
-                };
-                item.addEventListener('click', () => {
-                    const allImgs = Array.from(container.querySelectorAll('img')).map(i => i.src);
-                    const index = allImgs.indexOf(img.src);
-                    openLightbox(allImgs, index);
-                });
-            });
-        }
-
-        function openLightbox(images, index) {
-            currentGalleryImages = images;
-            currentImageIndex = index;
-            updateLightboxImg();
-            lightboxModal.classList.add('active');
-        }
-
-        function updateLightboxImg() {
-            lightboxImg.src = currentGalleryImages[currentImageIndex];
-        }
-
-        function closeLightbox() {
-            lightboxModal.classList.remove('active');
-        }
-
-        lightboxClose.addEventListener('click', closeLightbox);
-        lightboxPrev.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentImageIndex = (currentImageIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
-            updateLightboxImg();
-        });
-        lightboxNext.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentImageIndex = (currentImageIndex + 1) % currentGalleryImages.length;
-            updateLightboxImg();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (!lightboxModal.classList.contains('active')) return;
-            if (e.key === 'Escape') closeLightbox();
-            if (e.key === 'ArrowLeft') lightboxPrev.click();
-            if (e.key === 'ArrowRight') lightboxNext.click();
-        });
-
-        function createTextBlockElement(text = "在這裡輸入圖文排版或詳細說明...") {
-            const textBlock = document.createElement('div');
-            textBlock.className = 'text-block';
-            textBlock.setAttribute('contenteditable', isPreviewMode ? 'false' : 'true');
-            textBlock.setAttribute('data-was-editable', 'true');
-            textBlock.innerText = text;
-            textBlock.addEventListener('click', (e) => e.stopPropagation());
-            textBlock.addEventListener('input', triggerAutoSave);
-            return textBlock;
-        }
-
-        coverUploader.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file && activeCoverItem) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = activeCoverItem.querySelector('.cover-img');
-                    img.src = e.target.result; 
-                    triggerAutoSave();
-                };
-                reader.readAsDataURL(file);
+        ]
+    },
+    {
+        id: "item-4",
+        title: "Character Design",
+        coverSrc: "assets/covers/cover_cha.png",
+        descText: "Character design across diverse mediumsincluding animated shorts, games, merchandise, and LINE stickersshowcasing versatile visual styles.",
+        blocks: [
+            {
+                type: "gallery",
+                images: [
+                    "assets/character_design/bird1.png",
+                    "assets/character_design/bird2.png"
+                ],
+                marginTop: "0px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/character_design/monster1.jpg",
+                    "assets/character_design/monster2.jpg",
+                    "assets/character_design/monster3.jpg",
+                    "assets/character_design/monster4.jpg",
+                    "assets/character_design/monster5.jpg",
+                    "assets/character_design/monster6.jpg"
+                ],
+                marginTop: "20px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/character_design/bunnyB.png",
+                    "assets/character_design/bunnyA.png"
+                ],
+                marginTop: "30px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/character_design/cook1.jpg",
+                    "assets/character_design/cook2.jpg",
+                    "assets/character_design/cook3.jpg"
+                ],
+                marginTop: "30px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/character_design/ill1.jpg",
+                    "assets/character_design/ill2.jpg",
+                    "assets/character_design/ill3.jpg",
+                    "assets/character_design/ill4.jpg"
+                ],
+                marginTop: "30px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/character_design/night-setting1.png",
+                    "assets/character_design/night-setting2.png",
+                    "assets/character_design/cha-setting.png"
+                ],
+                marginTop: "30px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/character_design/ls001.jpg",
+                    "assets/character_design/ls002.jpg",
+                    "assets/character_design/ls003.png",
+                    "assets/character_design/ls004.png",
+                    "assets/character_design/ls005.png",
+                    "assets/character_design/ls006.png",
+                    "assets/character_design/ls007.png",
+                    "assets/character_design/ls008.png",
+                    "assets/character_design/ls009.png",
+                    "assets/character_design/ls010.png",
+                    "assets/character_design/ls011.png",
+                    "assets/character_design/ls012.png",
+                    "assets/character_design/ls013.png",
+                    "assets/character_design/ls014.png",
+                    "assets/character_design/ls015.png",
+                    "assets/character_design/ls016.png",
+                    "assets/character_design/ls017.png",
+                    "assets/character_design/ls018.png",
+                    "assets/character_design/ls019.png"
+                ],
+                marginTop: "30px"
             }
-            this.value = ''; 
-        });
-
-        mediaUploader.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (!file || !activeUploadSlot) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const fileUrl = e.target.result;
-                const imgEl = activeUploadSlot.querySelector('.preview-img');
-                const vidEl = activeUploadSlot.querySelector('.preview-vid');
-                const iframeEl = activeUploadSlot.querySelector('.preview-yt');
-
-                activeUploadSlot.classList.add('has-media'); 
-                iframeEl.style.display = 'none';
-
-                if (file.type.startsWith('video/')) {
-                    imgEl.style.display = 'none';
-                    vidEl.src = fileUrl;
-                    vidEl.style.display = 'block';
-                    activeUploadSlot.setAttribute('data-media-type', 'video');
-                } else {
-                    vidEl.style.display = 'none';
-                    vidEl.pause(); 
-                    imgEl.src = fileUrl;
-                    imgEl.style.display = 'block';
-                    activeUploadSlot.setAttribute('data-media-type', 'image');
-                }
-                triggerAutoSave();
-            };
-            reader.readAsDataURL(file);
-            this.value = ''; 
-        });
-
-        galleryPhotosUploader.addEventListener('change', function(event) {
-            const files = Array.from(event.target.files);
-            if (!files.length || !activeGalleryBlock) return;
-
-            const gridContainer = activeGalleryBlock.querySelector('.photo-grid-container');
-
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    addPhotoToGalleryGrid(gridContainer, e.target.result, activeGalleryBlock);
-                    triggerAutoSave();
-                };
-                reader.readAsDataURL(file);
-            });
-
-            this.value = '';
-        });
-
-        function saveDataToLocalStorage() {
-            const data = {
-                authorName: authorName.innerText,
-                authorRole: authorRole.innerText,
-                projects: []
-            };
-
-            const projectLis = document.querySelectorAll('#menuList li');
-            projectLis.forEach(li => {
-                const id = li.getAttribute('data-id');
-                const title = li.querySelector('.nav-item-text').innerText;
-                const gridItem = document.querySelector(`.gallery-item[data-id="${id}"]`);
-                const coverSrc = gridItem ? gridItem.querySelector('.cover-img').src : '';
-                
-                const detailItem = document.querySelector(`.project-detail-container[data-id="${id}"]`);
-                const detailDesc = detailItem ? detailItem.querySelector('.detail-desc') : null;
-                const descText = detailItem ? (detailDesc ? detailDesc.innerText : '__HIDE_SUBTITLE__') : '';
-                
-                const blocks = [];
-                if (detailItem) {
-                    const blockItems = detailItem.querySelectorAll('.content-block-item');
-                    blockItems.forEach(block => {
-                        const marginTop = block.style.marginTop || '30px';
-                        const mediaSlot = block.querySelector('.media-slot');
-                        const galleryGrid = block.querySelector('.gallery-grid-block');
-                        const textBlock = block.querySelector('.text-block');
-
-                        if (mediaSlot) {
-                            const img = mediaSlot.querySelector('.preview-img');
-                            const vid = mediaSlot.querySelector('.preview-vid');
-                            const iframe = mediaSlot.querySelector('.preview-yt');
-
-                            let mediaType = mediaSlot.getAttribute('data-media-type') || 'image';
-                            const youtubeLink = mediaSlot.querySelector('.youtube-link-card');
-                            let src = youtubeLink ? youtubeLink.href : img.src;
-
-                            if (iframe && iframe.style.display === 'block') {
-                                src = iframe.src;
-                                if (!mediaType || (mediaType !== 'youtube' && mediaType !== 'vimeo')) {
-                                    mediaType = iframe.src.includes('vimeo') ? 'vimeo' : 'youtube';
-                                }
-                            } else if (vid && vid.style.display === 'block') {
-                                mediaType = 'video';
-                                src = vid.src;
-                            }
-
-                            blocks.push({
-                                type: 'media',
-                                mediaSrc: src,
-                                mediaType: mediaType,
-                                marginTop: marginTop
-                            });
-                        } else if (galleryGrid) {
-                            const imgs = Array.from(galleryGrid.querySelectorAll('.photo-grid-item img')).map(i => i.src);
-                            blocks.push({
-                                type: 'gallery',
-                                images: imgs,
-                                marginTop: marginTop
-                            });
-                        } else if (textBlock) {
-                            blocks.push({
-                                type: 'text',
-                                text: textBlock.innerText,
-                                marginTop: marginTop
-                            });
-                        }
-                    });
-                }
-
-                data.projects.push({ id, title, coverSrc, descText, blocks });
-            });
-
-            try {
-                const jsonString = JSON.stringify(data);
-                localStorage.setItem(STORAGE_KEY, jsonString);
-            } catch (e) {
-                console.error("儲存失敗：", e);
-                alert("⚠️ 儲存失敗：上傳的圖片總容量已超過瀏覽器限制 (約 5MB)！\n建議將圖片進行壓縮後再上傳，或是使用 YouTube / Vimeo 影片嵌入。");
+        ]
+    },
+    {
+        id: "item-published-projects",
+        title: "Published Projects",
+        coverSrc: "assets/covers/cover_pjs.png",
+        descText: "Commercial Animations, Film & Released Game Projects",
+        blocks: [
+            {
+                type: "text",
+                text: "《Amo Bakery Mid-Autumn Festival 阿默蛋糕中秋節》｜ Commercial Animation\nRole: Storyboard, Character Design, Animation, Animation Supervisor",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://youtu.be/AkfJkQnC9oY?si=fIIkPLVQldEmOGqu",
+                mediaType: "youtube",
+                marginTop: "16px"
+            },
+            {
+                type: "text",
+                text: "《Under the Moonlight 釀月光》｜ Music Video\nRole: Animation Model Sheets, Layout, Key Animation, Animation Supervisor",
+                marginTop: "50px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://youtu.be/iR206jo8-Ac?si=XoTbZBRe_7ljHq71",
+                mediaType: "youtube-link",
+                marginTop: "16px"
+            },
+            {
+                type: "text",
+                text: "《Nightland 永夜島》｜ Animated Short Film\nRole: Animation Model Sheets, Animation Supervisor, Key Animation, Layout",
+                marginTop: "50px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://youtu.be/hSF9lbGHzJQ?si=V5PnFNS270GcHeWl",
+                mediaType: "youtube-link",
+                marginTop: "16px"
+            },
+            {
+                type: "text",
+                text: "《Galaxy Adventure of the NPM Guardians 國寶星遊記》｜ Animated Short Film\nRole: 2D Character Animation",
+                marginTop: "50px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://youtu.be/-GYYAms4h2E?si=HuOkudBK1gLHbWA-",
+                mediaType: "youtube",
+                marginTop: "16px"
+            },
+            {
+                type: "text",
+                text: "《Kooger The Dog 酷哥》｜ Animated TV Series\nRole: Layout, Key Animation, Animation",
+                marginTop: "50px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://youtu.be/dQA3nmV69us?si=ck0sRDPLSrS3WiNx",
+                mediaType: "youtube",
+                marginTop: "16px"
+            },
+            {
+                type: "text",
+                text: "《クレヨンしんちゃん オラの引越し物語 サボテン大襲撃》\n《Crayon Shin-chan: My Moving Story! Cactus Large Attack!》｜ Animated Film\nRole: Animation",
+                marginTop: "50px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/others/moviepost.png",
+                mediaType: "image",
+                marginTop: "16px"
+            },
+            {
+                type: "text",
+                text: "《Beat-Box》｜ Online Slot Game\nRole: Character Design & Animation, Motion & Visual Effects Design",
+                marginTop: "50px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://vimeo.com/1229070686?fl=tl&fe=ec",
+                mediaType: "vimeo",
+                marginTop: "1px"
+            },
+            {
+                type: "text",
+                text: "《Tokyo Kombat》｜ Online Fishing Game\nRole: Character Design & Animation, Motion & Visual Effects Design",
+                marginTop: "20px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://youtu.be/G5dQVG-kwX0?si=DjbUpzY4rdHmz_C0",
+                mediaType: "youtube",
+                marginTop: "1px"
+            },
+            {
+                type: "text",
+                text: "《American Kombat》｜ Online Fishing Game\nRole: Character Design & Animation, Motion & Visual Effects Design",
+                marginTop: "40px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://youtu.be/NLLZIDt6P_A",
+                mediaType: "youtube",
+                marginTop: "1px"
             }
+        ]
+    },
+    {
+        id: "item-8",
+        title: "Storyboard",
+        coverSrc: "assets/covers/cover_storyboard.png",
+        descText: "Storyboard design for commercials, animated shorts, and promotional videos, focused on visual rhythm and dynamic pacing.",
+        blocks: [
+            {
+                type: "text",
+                text: "Animatics for \"Evernight,\" a promotional teaser for a fantasy creature-inspired jewelry collection. Translating the core concept into a dynamic visual narrative.",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/-2fczYOPiMo?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "0px"
+            },
+            {
+                type: "text",
+                text: "Storyboard animatic for a section of an animated short film, focusing on cinematic continuity, character movement, and narrative pacing.",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/ElZ-KUJWaZY?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "0px"
+            },
+            {
+                type: "text",
+                text: "Storyboard design for \"Amo\" bakerys Mid-Autumn Festival commercial, capturing festive storytelling and brand identity.",
+                marginTop: "30px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/storyboard/AmoStoryboard_en-1.jpg",
+                    "assets/storyboard/AmoStoryboard_en-2.jpg",
+                    "assets/storyboard/AmoStoryboard_en-3.jpg",
+                    "assets/storyboard/AmoStoryboard_en-4.jpg",
+                    "assets/storyboard/AmoStoryboard_en-5.jpg",
+                    "assets/storyboard/AmoStoryboard_en-6.jpg"
+                ],
+                marginTop: "0px"
+            }
+        ]
+    },
+    {
+        id: "item-evernight",
+        title: "Evernight",
+        coverSrc: "assets/covers/cover_night.png",
+        descText: "An ongoing original animation project exploring a fantasy world of peculiar nocturnal creatures.",
+        blocks: [
+            {
+    type: "text",
+    text: "Concept and character design",
+    marginTop: "0px"
+},
+            {
+                type: "gallery",
+                images: [
+                    "assets/evernight/ccp1.png",
+                    "assets/evernight/bear.PNG",
+                    "assets/evernight/IMGraa.png"
+                ],
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "https://www.youtube.com/embed/WHpYKgMm_sU?enablejsapi=1",
+                mediaType: "youtube",
+                marginTop: "30px"
+            }
+        ]
+    },
+    {
+        id: "item-5",
+        title: "Illustration",
+        coverSrc: "assets/covers/cover_illu.png",
+        descText: "Illustration with diverse themes, utilizing a range of traditional and mixed mediaincluding ink pen, poster color, and digital tools.",
+        blocks: [
+            {
+                type: "media",
+                mediaSrc: "assets/illustration/sunsleep.jpg",
+                mediaType: "image",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/illustration/love.jpg",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/illustration/books.jpg",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/illustration/street.jpg",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/illustration/home.jpg",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/illustration/l_bulls.png",
+                    "assets/illustration/l_80's.png",
+                    "assets/illustration/l_JK90's.png",
+                    "assets/illustration/l_teashop.png",
+                    "assets/illustration/lovely.jpg",
+                    "assets/illustration/2018dog.jpg",
+                    "assets/illustration/sunny rain.jpg",
+                    "assets/illustration/video game.png",
+                    "assets/illustration/lisa.png"
+                ],
+                marginTop: "50px"
+            }
+        ]
+    },
+    {
+        id: "item-6",
+        title: "Comics to Animation",
+        coverSrc: "assets/covers/cover_comic.png",
+        descText: "Collaborating with comic artists to adapt 2D comics into dynamic motion content, driving engagement and social media reach for gaming and entertainment platforms.",
+        blocks: [
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/story001.mp4",
+                mediaType: "video",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/story002.mp4",
+                mediaType: "video",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/story003.mp4",
+                mediaType: "video",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/story004.mp4",
+                mediaType: "video",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/story005.mp4",
+                mediaType: "video",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/story006.mp4",
+                mediaType: "video",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/story007.mp4",
+                mediaType: "video",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/comics_animation/cam_buy11.mp4",
+                mediaType: "video",
+                marginTop: "30px"
+            }
+        ]
+    },
+    {
+        id: "item-7",
+        title: "Concept Art",
+        coverSrc: "assets/covers/cover_cep.png",
+        descText: "Concept art for games and animation, shaping visual styles and worldbuilding.",
+        blocks: [
+            {
+                type: "media",
+                mediaSrc: "assets/concept/concE.jpg",
+                mediaType: "image",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/concept/concept-01.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/concept/concB.jpg",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/concept/war1.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/concept/war2.png",
+                mediaType: "image",
+                marginTop: "30px"
+            }
+        ]
+    },
+    {
+        id: "item-9",
+        title: "Background Art",
+        coverSrc: "assets/covers/cover_bg.png",
+        descText: "Background art for games and animated shorts, spanning high-intensity battlefields to warm, stylized environments.",
+        blocks: [
+            {
+                type: "text",
+                text: "Game background art: Battlefield. High-intensity combat environment created with rich atmospheric lighting.",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/bg/sag01.png",
+                mediaType: "image",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/bg/sag02.png",
+                mediaType: "image",
+                marginTop: "12px"
+            },
+            {
+                type: "text",
+                text: "Animated short background: Stylized & Cute. Warm tones and charming fairytale aesthetics.",
+                marginTop: "34px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/bg/c01.png",
+                mediaType: "image",
+                marginTop: "0px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/bg/c03.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/bg/c04.png",
+                mediaType: "image",
+                marginTop: "30px"
+            },
+            {
+                type: "media",
+                mediaSrc: "assets/bg/c04mach.png",
+                mediaType: "image",
+                marginTop: "30px"
+            }
+        ]
+    },
+    {
+        id: "item-10",
+        title: "Sketch",
+        coverSrc: "assets/covers/cover_sketch.png",
+        descText: "Daily sketches and concept explorations, capturing quick ideas and dynamic observational studies.",
+        blocks: [
+            {
+                type: "gallery",
+                images: [
+                    "assets/sketch/100days/IMG_2222.PNG",
+                    "assets/sketch/100days/IMG_1811.PNG",
+                    "assets/sketch/100days/IMG_2220.PNG",
+                    "assets/sketch/100days/IMG_2227.PNG",
+                    "assets/sketch/100days/IMG_2230.PNG",
+                    "assets/sketch/100days/IMG_2221.PNG",
+                    "assets/sketch/100days/IMG_2223.PNG",
+                    "assets/sketch/100days/IMG_2224.PNG",
+                    "assets/sketch/100days/IMG_2225.PNG",
+                    "assets/sketch/100days/IMG_2226.PNG",
+                    "assets/sketch/100days/IMG_2233.PNG",
+                    "assets/sketch/100days/IMG_2228.PNG",
+                    "assets/sketch/100days/IMG_2231.PNG",
+                    "assets/sketch/100days/IMG_2235.PNG",
+                    "assets/sketch/100days/IMG_2237.PNG",
+                    "assets/sketch/100days/IMG_2236.PNG",
+                    "assets/sketch/100days/IMG_2234.PNG",
+                    "assets/sketch/100days/IMG_2240.PNG",
+                    "assets/sketch/100days/IMG_2241.PNG",
+                    "assets/sketch/100days/IMG_2229.PNG",
+                    "assets/sketch/100days/IMG_2238.PNG",
+                    "assets/sketch/100days/IMG_2232.PNG",
+                    "assets/sketch/100days/IMG_2239.PNG",
+                    "assets/sketch/100days/IMG_2245.PNG",
+                    "assets/sketch/100days/IMG_2242.PNG",
+                    "assets/sketch/100days/IMG_2243.PNG",
+                    "assets/sketch/100days/IMG_2244.PNG",
+                    "assets/sketch/100days/IMG_2246.PNG",
+                    "assets/sketch/100days/IMG_2247.PNG",
+                    "assets/sketch/100days/IMG_2248.PNG",
+                    "assets/sketch/100days/IMG_2255.PNG",
+                    "assets/sketch/100days/IMG_2261.PNG",
+                    "assets/sketch/100days/IMG_2270.PNG",
+                    "assets/sketch/100days/IMG_2272.PNG",
+                    "assets/sketch/100days/IMG_2381.PNG",
+                    "assets/sketch/100days/IMG_2382.PNG",
+                    "assets/sketch/100days/IMG_2383.PNG",
+                    "assets/sketch/100days/IMG_2384.PNG",
+                    "assets/sketch/100days/IMG_2385.PNG",
+                    "assets/sketch/100days/IMG_2386.PNG",
+                    "assets/sketch/100days/IMG_2412.PNG",
+                    "assets/sketch/100days/IMG_2413.PNG",
+                    "assets/sketch/100days/IMG_2414.PNG",
+                    "assets/sketch/100days/IMG_2449.PNG",
+                    "assets/sketch/100days/IMG_2450.PNG",
+                    "assets/sketch/100days/IMG_2451.PNG",
+                    "assets/sketch/100days/IMG_2452.PNG",
+                    "assets/sketch/100days/IMG_2473.PNG",
+                    "assets/sketch/100days/IMG_2468.jpg",
+                    "assets/sketch/100days/IMG_2483.PNG",
+                    "assets/sketch/100days/IMG_2482.PNG",
+                    "assets/sketch/100days/IMG_2511.PNG",
+                    "assets/sketch/100days/IMG_2481.PNG",
+                    "assets/sketch/100days/IMG_2484.PNG",
+                    "assets/sketch/100days/IMG_2504.PNG",
+                    "assets/sketch/100days/IMG_2505.PNG",
+                    "assets/sketch/100days/IMG_2506.PNG",
+                    "assets/sketch/100days/IMG_2507.PNG",
+                    "assets/sketch/100days/IMG_2509.PNG",
+                    "assets/sketch/100days/IMG_2510.PNG",
+                    "assets/sketch/100days/IMG_2512.PNG",
+                    "assets/sketch/100days/IMG_2532.PNG",
+                    "assets/sketch/100days/IMG_2534.PNG",
+                    "assets/sketch/100days/IMG_2508.PNG",
+                    "assets/sketch/100days/IMG_2548.PNG",
+                    "assets/sketch/100days/IMG_2530.PNG",
+                    "assets/sketch/100days/IMG_2533.PNG",
+                    "assets/sketch/100days/IMG_2535.PNG",
+                    "assets/sketch/100days/IMG_2637.PNG",
+                    "assets/sketch/100days/IMG_2531.PNG",
+                    "assets/sketch/100days/IMG_2547.PNG",
+                    "assets/sketch/100days/IMG_2549.PNG",
+                    "assets/sketch/100days/IMG_2550.PNG",
+                    "assets/sketch/100days/IMG_2551.PNG",
+                    "assets/sketch/100days/IMG_2638.PNG",
+                    "assets/sketch/100days/IMG_2639.PNG",
+                    "assets/sketch/100days/IMG_2640.PNG",
+                    "assets/sketch/100days/IMG_2643.PNG",
+                    "assets/sketch/100days/IMG_2641.PNG",
+                    "assets/sketch/100days/IMG_2642.PNG",
+                    "assets/sketch/100days/IMG_2644.PNG",
+                    "assets/sketch/100days/IMG_2649.jpg",
+                    "assets/sketch/100days/IMG_2650.PNG",
+                    "assets/sketch/100days/IMG_2652.PNG",
+                    "assets/sketch/100days/IMG_2653.PNG",
+                    "assets/sketch/100days/IMG_2659.PNG",
+                    "assets/sketch/100days/IMG_2645.PNG",
+                    "assets/sketch/100days/IMG_2663.PNG",
+                    "assets/sketch/100days/IMG_2690.PNG",
+                    "assets/sketch/100days/IMG_2694.PNG",
+                    "assets/sketch/100days/IMG_2696.PNG",
+                    "assets/sketch/100days/IMG_2695.PNG",
+                    "assets/sketch/100days/IMG_2688.PNG"
+                ],
+                marginTop: "0px"
+            },
+            {
+                type: "gallery",
+                images: [
+                    "assets/sketch/isk06.jpg",
+                    "assets/sketch/IMG_2095.JPG",
+                    "assets/sketch/isk03.jpg",
+                    "assets/sketch/isk02.jpg",
+                    "assets/sketch/isk05.jpg",
+                    "assets/sketch/s010.jpg",
+                    "assets/sketch/rough.jpg",
+                    "assets/sketch/IMG_1451.JPG",
+                    "assets/sketch/l003.jpg",
+                    "assets/sketch/s004.jpg",
+                    "assets/sketch/s019.jpg",
+                    "assets/sketch/samurai_02.png",
+                    "assets/sketch/samurai_05.png",
+                    "assets/sketch/samurai_01.png",
+                    "assets/sketch/s025.jpg",
+                    "assets/sketch/sc_4.jpg",
+                    "assets/sketch/sc_5.jpg"
+                ],
+                marginTop: "13px"
+            }
+        ]
+    }
+];
+
+const sidebar = document.getElementById('sidebar');
+const menuToggle = document.getElementById('menuToggleBtn');
+const menu = document.getElementById('menuList');
+const gallery = document.getElementById('galleryView');
+const details = document.getElementById('allProjectsDetails');
+const main = document.getElementById('mainContent');
+const worksButton = document.getElementById('workHomeBtn');
+const aboutButton = document.getElementById('aboutBtn');
+const about = document.getElementById('aboutSection');
+const lightbox = document.getElementById('lightboxModal');
+const lightboxImage = document.getElementById('lightboxImg');
+
+let lightboxImages = [];
+let lightboxIndex = 0;
+let previousFocus = null;
+
+/* 共用元素 */
+function element(tag, className, text) {
+    const node = document.createElement(tag);
+
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+
+    return node;
+}
+
+function makeClickable(node, callback) {
+    node.tabIndex = 0;
+    node.setAttribute('role', 'button');
+    node.addEventListener('click', callback);
+
+    node.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            callback();
         }
+    });
+}
 
-        function loadDataFromLocalStorage() {
-            const PUBLISHED_PROJECT = {
-                "id": "item-published-projects",
-                "title": "Published Projects",
-                "coverSrc": "assets/covers/cover_pjs.png",
-                "descText": "Commercial Animations, Film & Released Game Projects",
-                "blocks": [
-                                {
-                                                "type": "text",
-                                                "text": "《Amo Bakery Mid-Autumn Festival 阿默蛋糕中秋節》｜ Commercial Animation\nRole: Storyboard, Character Design, Animation, Animation Supervisor",
-                                                "marginTop": "0px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://youtu.be/AkfJkQnC9oY?si=fIIkPLVQldEmOGqu",
-                                                "mediaType": "youtube",
-                                                "marginTop": "16px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《Under the Moonlight 釀月光》｜ Music Video\nRole: Animation Model Sheets, Layout, Key Animation, Animation Supervisor",
-                                                "marginTop": "50px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://youtu.be/iR206jo8-Ac?si=XoTbZBRe_7ljHq71",
-                                                "mediaType": "youtube-link",
-                                                "marginTop": "16px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《Nightland 永夜島》｜ Animated Short Film\nRole: Animation Model Sheets, Animation Supervisor, Key Animation, Layout",
-                                                "marginTop": "50px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://youtu.be/hSF9lbGHzJQ?si=V5PnFNS270GcHeWl",
-                                                "mediaType": "youtube-link",
-                                                "marginTop": "16px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《Galaxy Adventure of the NPM Guardians 國寶星遊記》｜ Animated Short Film\nRole: 2D Character Animation",
-                                                "marginTop": "50px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://youtu.be/-GYYAms4h2E?si=HuOkudBK1gLHbWA-",
-                                                "mediaType": "youtube",
-                                                "marginTop": "16px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《Kooger The Dog 酷哥》｜ Animated TV Series\nRole: Layout, Key Animation, Animation",
-                                                "marginTop": "50px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://youtu.be/dQA3nmV69us?si=ck0sRDPLSrS3WiNx",
-                                                "mediaType": "youtube",
-                                                "marginTop": "16px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《クレヨンしんちゃん オラの引越し物語 サボテン大襲撃》\n《Crayon Shin-chan: My Moving Story! Cactus Large Attack!》｜ Animated Film\nRole: Animation",
-                                                "marginTop": "50px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "assets/others/moviepost.png",
-                                                "mediaType": "image",
-                                                "marginTop": "16px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《Beat-Box》｜ Online Slot Game\nRole: Character Design & Animation, Motion & Visual Effects Design",
-                                                "marginTop": "50px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://vimeo.com/1229070686?fl=tl&fe=ec",
-                                                "mediaType": "vimeo",
-                                                "marginTop": "1px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《Tokyo Kombat》｜ Online Fishing Game\nRole: Character Design & Animation, Motion & Visual Effects Design",
-                                                "marginTop": "20px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://youtu.be/G5dQVG-kwX0?si=DjbUpzY4rdHmz_C0",
-                                                "mediaType": "youtube",
-                                                "marginTop": "1px"
-                                },
-                                {
-                                                "type": "text",
-                                                "text": "《American Kombat》｜ Online Fishing Game\nRole: Character Design & Animation, Motion & Visual Effects Design",
-                                                "marginTop": "40px"
-                                },
-                                {
-                                                "type": "media",
-                                                "mediaSrc": "https://youtu.be/NLLZIDt6P_A",
-                                                "mediaType": "youtube",
-                                                "marginTop": "1px"
-                                }
-                ]
-};
-            const json = localStorage.getItem(STORAGE_KEY);
-            if (!json) {
-                // 最新更新的專案初始資料（以相對路徑儲存）
-                const initialProjects = [
-                    {
-                        "id": "item-1",
-                        "title": "Animation Showreel",
-                        "coverSrc": "assets/covers/cover_show.png",
-                        "descText": "Showcase of 2D animation and game VFX, highlighting a versatile adaptability across diverse art stylesfrom anime and stylized designs to commercial aesthetics.",
-                        "blocks": [
-                            {
-                                "type": "text",
-                                "text": "Includes animated projects across TV series, feature films, commercials, short films, and music videos.",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/WwUb8YPPIrI?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "text",
-                                "text": "Specializing in the seamless integration of dynamic character animation and game visual effects (VFX).",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/yWMpS69BGuw?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "0px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-2",
-                        "title": "VFX/Motion Design",
-                        "coverSrc": "assets/covers/cover_vfx.png",
-                        "descText": "A showcasing of motion design and visual effects for Slot and Fishing games. Features include character animation, high-impact win/bonus VFX, dynamic loading scenes, and promotional motion banners. Designed to evoke strong visual impact and smooth responsiveness, enhancing overall player engagement.",
-                        "blocks": [
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/NLLZIDt6P_A?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://player.vimeo.com/video/1223922848",
-                                "mediaType": "vimeo",
-                                "marginTop": "37px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://player.vimeo.com/video/1223922847",
-                                "mediaType": "vimeo",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://player.vimeo.com/video/1223922836",
-                                "mediaType": "vimeo",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/9_QsZuRF4A4?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "39px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://player.vimeo.com/video/1223922837",
-                                "mediaType": "vimeo",
-                                "marginTop": "13px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://player.vimeo.com/video/1223922838",
-                                "mediaType": "vimeo",
-                                "marginTop": "9px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/DRoo6UMWPRA?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/cc1HCO5aScc?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "26px"
-                            },
-                            
-                        ]
-                    },
-                    {
-                        "id": "item-3",
-                        "title": "Game Art Design",
-                        "coverSrc": "assets/covers/cover_game.png",
-                        "descText": "Comprehensive game art design spanning characters, assets, UI, background art, and promotional banners.",
-                        "blocks": [
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/items1.png",
-                                "mediaType": "image",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/items2.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/items3.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/items4.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/items5.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/banners1.jpg",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/banners2.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/logos.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/game_art/ui.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-4",
-                        "title": "Character Design",
-                        "coverSrc": "assets/covers/cover_cha.png",
-                        "descText": "Character design across diverse mediumsincluding animated shorts, games, merchandise, and LINE stickersshowcasing versatile visual styles.",
-                        "blocks": [
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/character_design/bird1.png",
-                                    "assets/character_design/bird2.png"
-                                ],
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/character_design/monster1.jpg",
-                                    "assets/character_design/monster2.jpg",
-                                    "assets/character_design/monster3.jpg",
-                                    "assets/character_design/monster4.jpg",
-                                    "assets/character_design/monster5.jpg",
-                                    "assets/character_design/monster6.jpg"
-                                ],
-                                "marginTop": "20px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/character_design/bunnyB.png",
-                                    "assets/character_design/bunnyA.png"
-                                ],
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/character_design/cook1.jpg",
-                                    "assets/character_design/cook2.jpg",
-                                    "assets/character_design/cook3.jpg"
-                                ],
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/character_design/ill1.jpg",
-                                    "assets/character_design/ill2.jpg",
-                                    "assets/character_design/ill3.jpg",
-                                    "assets/character_design/ill4.jpg"
-                                ],
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/character_design/night-setting1.png",
-                                    "assets/character_design/night-setting2.png",
-                                    "assets/character_design/cha-setting.png"
-                                ],
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/character_design/ls001.jpg",
-                                    "assets/character_design/ls002.jpg",
-                                    "assets/character_design/ls003.png",
-                                    "assets/character_design/ls004.png",
-                                    "assets/character_design/ls005.png",
-                                    "assets/character_design/ls006.png",
-                                    "assets/character_design/ls007.png",
-                                    "assets/character_design/ls008.png",
-                                    "assets/character_design/ls009.png",
-                                    "assets/character_design/ls010.png",
-                                    "assets/character_design/ls011.png",
-                                    "assets/character_design/ls012.png",
-                                    "assets/character_design/ls013.png",
-                                    "assets/character_design/ls014.png",
-                                    "assets/character_design/ls015.png",
-                                    "assets/character_design/ls016.png",
-                                    "assets/character_design/ls017.png",
-                                    "assets/character_design/ls018.png",
-                                    "assets/character_design/ls019.png"
-                                ],
-                                "marginTop": "30px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-5",
-                        "title": "Illustration",
-                        "coverSrc": "assets/covers/cover_illu.png",
-                        "descText": "Illustration with diverse themes, utilizing a range of traditional and mixed mediaincluding ink pen, poster color, and digital tools.",
-                        "blocks": [
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/illustration/sunsleep.jpg",
-                                "mediaType": "image",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/illustration/love.jpg",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/illustration/books.jpg",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/illustration/street.jpg",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/illustration/home.jpg",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/illustration/l_bulls.png",
-                                    "assets/illustration/l_80's.png",
-                                    "assets/illustration/l_JK90's.png",
-                                    "assets/illustration/l_teashop.png",
-                                    "assets/illustration/lovely.jpg",
-                                    "assets/illustration/2018dog.jpg",
-                                    "assets/illustration/sunny rain.jpg",
-                                    "assets/illustration/video game.png",
-                                    "assets/illustration/lisa.png"
-                                ],
-                                "marginTop": "50px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-6",
-                        "title": "Comics to Animation",
-                        "coverSrc": "assets/covers/cover_comic.png",
-                        "descText": "Collaborating with comic artists to adapt 2D comics into dynamic motion content, driving engagement and social media reach for gaming and entertainment platforms.",
-                        "blocks": [
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/story001.mp4",
-                                "mediaType": "video",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/story002.mp4",
-                                "mediaType": "video",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/story003.mp4",
-                                "mediaType": "video",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/story004.mp4",
-                                "mediaType": "video",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/story005.mp4",
-                                "mediaType": "video",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/story006.mp4",
-                                "mediaType": "video",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/story007.mp4",
-                                "mediaType": "video",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/comics_animation/cam_buy11.mp4",
-                                "mediaType": "video",
-                                "marginTop": "30px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-7",
-                        "title": "Concept Art",
-                        "coverSrc": "assets/covers/cover_cep.png",
-                        "descText": "Concept art for games and animation, shaping visual styles and worldbuilding.",
-                        "blocks": [
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/concept/concE.jpg",
-                                "mediaType": "image",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/concept/concept-01.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/concept/concB.jpg",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/concept/war1.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/concept/war2.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-8",
-                        "title": "Storyboard",
-                        "coverSrc": "assets/covers/cover_storyboard.png",
-                        "descText": "Storyboard design for commercials, animated shorts, and promotional videos, focused on visual rhythm and dynamic pacing.",
-                        "blocks": [
-                            {
-                                "type": "text",
-                                "text": "Animatics for \"Eternal Night,\" a promotional teaser for a fantasy creature-inspired jewelry collection. Translating the core concept into a dynamic visual narrative.",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/-2fczYOPiMo?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "text",
-                                "text": "Storyboard animatic for a section of an animated short film, focusing on cinematic continuity, character movement, and narrative pacing.",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "https://www.youtube.com/embed/ElZ-KUJWaZY?enablejsapi=1",
-                                "mediaType": "youtube",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "text",
-                                "text": "Storyboard design for \"Amo\" bakerys Mid-Autumn Festival commercial, capturing festive storytelling and brand identity.",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/storyboard/AmoStoryboard_en-1.jpg",
-                                    "assets/storyboard/AmoStoryboard_en-2.jpg",
-                                    "assets/storyboard/AmoStoryboard_en-3.jpg",
-                                    "assets/storyboard/AmoStoryboard_en-4.jpg",
-                                    "assets/storyboard/AmoStoryboard_en-5.jpg",
-                                    "assets/storyboard/AmoStoryboard_en-6.jpg"
-                                ],
-                                "marginTop": "0px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-9",
-                        "title": "Background Art",
-                        "coverSrc": "assets/covers/cover_bg.png",
-                        "descText": "Background art for games and animated shorts, spanning high-intensity battlefields to warm, stylized environments.",
-                        "blocks": [
-                            {
-                                "type": "text",
-                                "text": "Game background art: Battlefield. High-intensity combat environment created with rich atmospheric lighting.",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/bg/sag01.png",
-                                "mediaType": "image",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/bg/sag02.png",
-                                "mediaType": "image",
-                                "marginTop": "12px"
-                            },
-                            {
-                                "type": "text",
-                                "text": "Animated short background: Stylized & Cute. Warm tones and charming fairytale aesthetics.",
-                                "marginTop": "34px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/bg/c01.png",
-                                "mediaType": "image",
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/bg/c03.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/bg/c04.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            },
-                            {
-                                "type": "media",
-                                "mediaSrc": "assets/bg/c04mach.png",
-                                "mediaType": "image",
-                                "marginTop": "30px"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "item-10",
-                        "title": "Sketch",
-                        "coverSrc": "assets/covers/cover_sketch.png",
-                        "descText": "Daily sketches and concept explorations, capturing quick ideas and dynamic observational studies.",
-                        "blocks": [
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/sketch/100days/IMG_2222.PNG",
-                                    "assets/sketch/100days/IMG_1811.PNG",
-                                    "assets/sketch/100days/IMG_2220.PNG",
-                                    "assets/sketch/100days/IMG_2227.PNG",
-                                    "assets/sketch/100days/IMG_2230.PNG",
-                                    "assets/sketch/100days/IMG_2221.PNG",
-                                    "assets/sketch/100days/IMG_2223.PNG",
-                                    "assets/sketch/100days/IMG_2224.PNG",
-                                    "assets/sketch/100days/IMG_2225.PNG",
-                                    "assets/sketch/100days/IMG_2226.PNG",
-                                    "assets/sketch/100days/IMG_2233.PNG",
-                                    "assets/sketch/100days/IMG_2228.PNG",
-                                    "assets/sketch/100days/IMG_2231.PNG",
-                                    "assets/sketch/100days/IMG_2235.PNG",
-                                    "assets/sketch/100days/IMG_2237.PNG",
-                                    "assets/sketch/100days/IMG_2236.PNG",
-                                    "assets/sketch/100days/IMG_2234.PNG",
-                                    "assets/sketch/100days/IMG_2240.PNG",
-                                    "assets/sketch/100days/IMG_2241.PNG",
-                                    "assets/sketch/100days/IMG_2229.PNG",
-                                    "assets/sketch/100days/IMG_2238.PNG",
-                                    "assets/sketch/100days/IMG_2232.PNG",
-                                    "assets/sketch/100days/IMG_2239.PNG",
-                                    "assets/sketch/100days/IMG_2245.PNG",
-                                    "assets/sketch/100days/IMG_2242.PNG",
-                                    "assets/sketch/100days/IMG_2243.PNG",
-                                    "assets/sketch/100days/IMG_2244.PNG",
-                                    "assets/sketch/100days/IMG_2246.PNG",
-                                    "assets/sketch/100days/IMG_2247.PNG",
-                                    "assets/sketch/100days/IMG_2248.PNG",
-                                    "assets/sketch/100days/IMG_2255.PNG",
-                                    "assets/sketch/100days/IMG_2261.PNG",
-                                    "assets/sketch/100days/IMG_2270.PNG",
-                                    "assets/sketch/100days/IMG_2272.PNG",
-                                    "assets/sketch/100days/IMG_2381.PNG",
-                                    "assets/sketch/100days/IMG_2382.PNG",
-                                    "assets/sketch/100days/IMG_2383.PNG",
-                                    "assets/sketch/100days/IMG_2384.PNG",
-                                    "assets/sketch/100days/IMG_2385.PNG",
-                                    "assets/sketch/100days/IMG_2386.PNG",
-                                    "assets/sketch/100days/IMG_2412.PNG",
-                                    "assets/sketch/100days/IMG_2413.PNG",
-                                    "assets/sketch/100days/IMG_2414.PNG",
-                                    "assets/sketch/100days/IMG_2449.PNG",
-                                    "assets/sketch/100days/IMG_2450.PNG",
-                                    "assets/sketch/100days/IMG_2451.PNG",
-                                    "assets/sketch/100days/IMG_2452.PNG",
-                                    "assets/sketch/100days/IMG_2473.PNG",
-                                    "assets/sketch/100days/IMG_2468.jpg",
-                                    "assets/sketch/100days/IMG_2483.PNG",
-                                    "assets/sketch/100days/IMG_2482.PNG",
-                                    "assets/sketch/100days/IMG_2511.PNG",
-                                    "assets/sketch/100days/IMG_2481.PNG",
-                                    "assets/sketch/100days/IMG_2484.PNG",
-                                    "assets/sketch/100days/IMG_2504.PNG",
-                                    "assets/sketch/100days/IMG_2505.PNG",
-                                    "assets/sketch/100days/IMG_2506.PNG",
-                                    "assets/sketch/100days/IMG_2507.PNG",
-                                    "assets/sketch/100days/IMG_2509.PNG",
-                                    "assets/sketch/100days/IMG_2510.PNG",
-                                    "assets/sketch/100days/IMG_2512.PNG",
-                                    "assets/sketch/100days/IMG_2532.PNG",
-                                    "assets/sketch/100days/IMG_2534.PNG",
-                                    "assets/sketch/100days/IMG_2508.PNG",
-                                    "assets/sketch/100days/IMG_2548.PNG",
-                                    "assets/sketch/100days/IMG_2530.PNG",
-                                    "assets/sketch/100days/IMG_2533.PNG",
-                                    "assets/sketch/100days/IMG_2535.PNG",
-                                    "assets/sketch/100days/IMG_2637.PNG",
-                                    "assets/sketch/100days/IMG_2531.PNG",
-                                    "assets/sketch/100days/IMG_2547.PNG",
-                                    "assets/sketch/100days/IMG_2549.PNG",
-                                    "assets/sketch/100days/IMG_2550.PNG",
-                                    "assets/sketch/100days/IMG_2551.PNG",
-                                    "assets/sketch/100days/IMG_2638.PNG",
-                                    "assets/sketch/100days/IMG_2639.PNG",
-                                    "assets/sketch/100days/IMG_2640.PNG",
-                                    "assets/sketch/100days/IMG_2643.PNG",
-                                    "assets/sketch/100days/IMG_2641.PNG",
-                                    "assets/sketch/100days/IMG_2642.PNG",
-                                    "assets/sketch/100days/IMG_2644.PNG",
-                                    "assets/sketch/100days/IMG_2649.jpg",
-                                    "assets/sketch/100days/IMG_2650.PNG",
-                                    "assets/sketch/100days/IMG_2652.PNG",
-                                    "assets/sketch/100days/IMG_2653.PNG",
-                                    "assets/sketch/100days/IMG_2659.PNG",
-                                    "assets/sketch/100days/IMG_2645.PNG",
-                                    "assets/sketch/100days/IMG_2663.PNG"
-                                ],
-                                "marginTop": "0px"
-                            },
-                            {
-                                "type": "gallery",
-                                "images": [
-                                    "assets/sketch/isk06.jpg",
-                                    "assets/sketch/IMG_2095.JPG",
-                                    "assets/sketch/isk03.jpg",
-                                    "assets/sketch/isk02.jpg",
-                                    "assets/sketch/isk05.jpg",
-                                    "assets/sketch/s010.jpg",
-                                    "assets/sketch/rough.jpg",
-                                    "assets/sketch/IMG_1451.JPG",
-                                    "assets/sketch/l003.jpg",
-                                    "assets/sketch/s004.jpg",
-                                    "assets/sketch/s019.jpg",
-                                    "assets/sketch/samurai_02.png",
-                                    "assets/sketch/samurai_05.png",
-                                    "assets/sketch/samurai_01.png",
-                                    "assets/sketch/s025.jpg",
-                                    "assets/sketch/sc_4.jpg",
-                                    "assets/sketch/sc_5.jpg"
-                                ],
-                                "marginTop": "13px"
-                            }
-                        ]
-                    }
-                ];
-                initialProjects.splice(4, 0, PUBLISHED_PROJECT);
+/* 選單與頁面切換 */
+function closeMenu() {
+    sidebar.classList.remove('active');
+    menuToggle.setAttribute('aria-expanded', 'false');
+}
 
-                initialProjects.forEach(item => {
-                    createProject(item.title, item.id, item.coverSrc, item.descText, item.blocks || []);
-                });
-                placeStoryboardBeforeIllustration();
-                return;
-            }
+function stopMedia() {
+    details.querySelectorAll('video').forEach(video => {
+        video.pause();
+    });
 
-            try {
-                const data = JSON.parse(json);
-                authorName.innerText = data.authorName || "CHIAO-LUN LI";
-                authorRole.innerText = data.authorRole || "Animator/2D Artist";
-
-                data.projects.forEach(p => {
-                    createProject(p.title, p.id, p.coverSrc, p.descText, p.blocks);
-                });
-                if (!data.projects.some(p => p.id === PUBLISHED_PROJECT.id)) {
-                    createProject(PUBLISHED_PROJECT.title, PUBLISHED_PROJECT.id, PUBLISHED_PROJECT.coverSrc, PUBLISHED_PROJECT.descText, PUBLISHED_PROJECT.blocks);
-                    const publishedNav = menuList.querySelector(`[data-id="${PUBLISHED_PROJECT.id}"]`);
-                    if (publishedNav) menuList.insertBefore(publishedNav, menuList.children[4] || null);
-                    syncGridOrder();
-                    triggerAutoSave();
-                }
-                placeStoryboardBeforeIllustration();
-            } catch (e) {
-                console.error("解析存檔失敗:", e);
-            }
+    details.querySelectorAll('iframe').forEach(frame => {
+        if (frame.src.includes('youtube.com')) {
+            frame.contentWindow?.postMessage(
+                JSON.stringify({
+                    event: 'command',
+                    func: 'pauseVideo',
+                    args: []
+                }),
+                'https://www.youtube.com'
+            );
+        } else if (frame.src.includes('vimeo.com')) {
+            frame.contentWindow?.postMessage(
+                JSON.stringify({ method: 'pause' }),
+                'https://player.vimeo.com'
+            );
         }
+    });
+}
 
-        resetStorageBtn.addEventListener('click', () => {
-            if (confirm("確定要重置所有修改，回復成初始畫面嗎？")) {
-                localStorage.removeItem(STORAGE_KEY);
-                location.reload();
-            }
+function showView(id) {
+    stopMedia();
+
+    gallery.hidden = id !== 'works';
+    about.hidden = id !== 'about';
+
+    details.querySelectorAll('.project-detail-container')
+        .forEach(section => {
+            section.hidden = section.dataset.id !== id;
         });
 
-        addProjectBtn.addEventListener('click', () => {
-            createProject("NEW PROJECT"); 
-            document.querySelector('.sidebar').scrollTop = document.querySelector('.sidebar').scrollHeight;
-            document.getElementById('mainContent').scrollTop = document.getElementById('mainContent').scrollHeight;
-            triggerAutoSave();
-        });
+    worksButton.classList.toggle('active', id === 'works');
+    aboutButton.classList.toggle('active', id === 'about');
 
-        function openDetailView(id) {
-            galleryView.style.display = 'none';
-            aboutSection.style.display = 'none';
-            document.querySelectorAll('.project-detail-container').forEach(detail => {
-                if (detail.id !== 'aboutSection') detail.style.display = 'none';
-            });
-            
-            const targetDetail = document.querySelector(`.project-detail-container[data-id="${id}"]`);
-            if (targetDetail) {
-                targetDetail.style.display = 'block';
-            }
+    menu.querySelectorAll('li').forEach(item => {
+        item.classList.toggle('active', item.dataset.id === id);
+    });
 
-            // 更新左側選單高亮狀態
-            workHomeBtn.classList.remove('active');
-            aboutBtn.classList.remove('active');
-            document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
-            const activeLi = document.querySelector(`#menuList li[data-id="${id}"]`);
-            if (activeLi) {
-                activeLi.classList.add('active');
-            }
+    main.scrollTop = 0;
+    closeMenu();
+}
 
-            document.getElementById('mainContent').scrollTop = 0;
+/* 燈箱 */
+function updateLightbox() {
+    lightboxImage.src = lightboxImages[lightboxIndex];
+    lightboxImage.alt =
+        `Gallery image ${lightboxIndex + 1} of ${lightboxImages.length}`;
+}
+
+function openLightbox(images, index) {
+    previousFocus = document.activeElement;
+    lightboxImages = images;
+    lightboxIndex = index;
+
+    updateLightbox();
+    lightbox.hidden = false;
+    document.getElementById('lightboxClose').focus();
+}
+
+function closeLightbox() {
+    lightbox.hidden = true;
+    lightboxImage.removeAttribute('src');
+    previousFocus?.focus();
+}
+
+function stepLightbox(amount) {
+    if (!lightboxImages.length) return;
+
+    lightboxIndex =
+        (lightboxIndex + amount + lightboxImages.length)
+        % lightboxImages.length;
+
+    updateLightbox();
+}
+
+/* 圖片藝廊 */
+function bindGalleryItem(item, images, index) {
+    const image = item.querySelector('img');
+
+    const setRatio = () => {
+        if (image.naturalWidth && image.naturalHeight) {
+            item.style.aspectRatio =
+                `${image.naturalWidth} / ${image.naturalHeight}`;
+        }
+    };
+
+    image.addEventListener('load', setRatio);
+    if (image.complete) setRatio();
+
+    makeClickable(item, () => openLightbox(images, index));
+    item.setAttribute(
+        'aria-label',
+        `Open gallery image ${index + 1}`
+    );
+}
+
+function makeGallery(images) {
+    const block = element('div', 'gallery-grid-block');
+    const grid = element('div', 'photo-grid-container');
+
+    images.forEach((src, index) => {
+        const item = element('div', 'photo-grid-item');
+        const image = element('img');
+
+        image.src = src;
+        image.alt = `Gallery image ${index + 1}`;
+        image.loading = 'lazy';
+
+        item.append(image);
+        bindGalleryItem(item, images, index);
+        grid.append(item);
+    });
+
+    block.append(grid);
+    return block;
+}
+
+/* 影音 */
+function youtubeId(src) {
+    const url = new URL(src, location.href);
+
+    if (url.hostname === 'youtu.be') {
+        return url.pathname.slice(1);
+    }
+
+    return url.searchParams.get('v')
+        || url.pathname.match(/\/(?:embed|shorts)\/([^/]+)/)?.[1]
+        || '';
+}
+
+function makeMedia(block, title) {
+    const slot = element('div', 'media-slot');
+    const src = block.mediaSrc;
+
+    if (block.mediaType === 'youtube-link') {
+        const link = element('a', 'youtube-link-card');
+
+        link.href = src;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute(
+            'aria-label',
+            `Watch ${title} on YouTube`
+        );
+
+        const image = element('img');
+        image.src =
+            `https://img.youtube.com/vi/${youtubeId(src)}/hqdefault.jpg`;
+        image.alt = `${title} video thumbnail`;
+        image.loading = 'lazy';
+
+        link.append(
+            image,
+            element('span', '', 'Watch on YouTube ↗')
+        );
+
+        slot.append(link);
+
+    } else if (
+        block.mediaType === 'youtube'
+        || block.mediaType === 'vimeo'
+    ) {
+        const frame = element('iframe');
+
+        if (block.mediaType === 'youtube') {
+            frame.src =
+                `https://www.youtube.com/embed/${youtubeId(src)}?enablejsapi=1`;
+        } else {
+            const id = new URL(src).pathname
+                .match(/(?:video\/)?(\d+)/)?.[1];
+
+            frame.src = `https://player.vimeo.com/video/${id}`;
         }
 
-        workHomeBtn.addEventListener('click', () => {
-            document.querySelectorAll('.project-detail-container').forEach(detail => detail.style.display = 'none');
-            galleryView.style.display = 'grid';
-            
-            // 高亮 WORKS，移除專案與 ABOUT 高亮
-            document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
-            aboutBtn.classList.remove('active');
-            workHomeBtn.classList.add('active');
+        frame.title = `${title} video`;
+        frame.loading = 'lazy';
+        frame.allow =
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+        frame.allowFullscreen = true;
+        frame.referrerPolicy = 'strict-origin-when-cross-origin';
 
-            document.getElementById('mainContent').scrollTop = 0;
-            sidebar.classList.remove('active');
+        slot.append(frame);
+
+    } else if (block.mediaType === 'video') {
+        const video = element('video');
+
+        video.src = src;
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'none';
+
+        slot.append(video);
+
+    } else {
+        const image = element('img');
+
+        image.src = src;
+        image.alt = title;
+        image.loading = 'lazy';
+
+        slot.append(image);
+    }
+
+    return slot;
+}
+
+/* 回到頁首 */
+function topButton() {
+    const container = element('div', 'back-to-top-container');
+    const button = element('button', 'back-to-top-btn', '▲ TOP');
+
+    button.type = 'button';
+
+    button.addEventListener('click', () => {
+        main.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
+    });
 
-        aboutBtn.addEventListener('click', () => {
-            galleryView.style.display = 'none';
-            document.querySelectorAll('.project-detail-container').forEach(detail => detail.style.display = 'none');
-            aboutSection.style.display = 'block';
+    container.append(button);
+    return container;
+}
 
-            // 高亮 ABOUT，移除其他高亮
-            workHomeBtn.classList.remove('active');
-            document.querySelectorAll('#menuList li').forEach(li => li.classList.remove('active'));
-            aboutBtn.classList.add('active');
+/* 建立所有專案 */
+projects.forEach(project => {
+    const nav = element('li');
+    nav.dataset.id = project.id;
 
-            document.getElementById('mainContent').scrollTop = 0;
-            sidebar.classList.remove('active');
+    nav.append(
+        element('span', 'nav-item-text', project.title)
+    );
+
+    makeClickable(nav, () => showView(project.id));
+    menu.append(nav);
+
+    const cover = element('div', 'gallery-item');
+    const image = element('img', 'cover-img');
+
+    image.src = project.coverSrc;
+    image.alt = project.title;
+    image.loading = 'lazy';
+
+    const overlay = element('div', 'overlay');
+
+    overlay.append(
+        element('div', 'project-title-grid', project.title)
+    );
+
+    cover.append(image, overlay);
+    makeClickable(cover, () => showView(project.id));
+    gallery.append(cover);
+
+    const section = element('section', 'project-detail-container');
+    section.dataset.id = project.id;
+    section.hidden = true;
+
+    const header = element('div', 'detail-header-text');
+
+    header.append(
+        element('h1', 'detail-title', project.title)
+    );
+
+    if (
+        project.descText
+        && project.descText !== '__HIDE_SUBTITLE__'
+    ) {
+        header.append(
+            element('div', 'detail-desc', project.descText)
+        );
+    }
+
+    const content = element('div', 'dynamic-content-area');
+
+    project.blocks.forEach(block => {
+        const wrapper = element('div', 'content-block-item');
+        wrapper.style.marginTop = block.marginTop || '30px';
+
+        if (block.type === 'text') {
+            wrapper.append(
+                element('div', 'text-block', block.text)
+            );
+        } else if (block.type === 'gallery') {
+            wrapper.append(makeGallery(block.images));
+        } else if (block.type === 'media') {
+            wrapper.append(makeMedia(block, project.title));
+        }
+
+        content.append(wrapper);
+    });
+
+    section.append(header, content, topButton());
+    details.append(section);
+});
+
+/* 導覽事件 */
+makeClickable(worksButton, () => showView('works'));
+makeClickable(aboutButton, () => showView('about'));
+
+menuToggle.addEventListener('click', () => {
+    const open = sidebar.classList.toggle('active');
+
+    menuToggle.setAttribute(
+        'aria-expanded',
+        String(open)
+    );
+});
+
+about.querySelector('.back-to-top-btn')
+    .addEventListener('click', () => {
+        main.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
+    });
 
-        loadDataFromLocalStorage();
-        initAboutGalleryLightbox();
-    </script>
+/* About 圖片燈箱 */
+const aboutItems = Array.from(
+    document.querySelectorAll(
+        '#aboutGalleryContainer .photo-grid-item'
+    )
+);
+
+const aboutImages = aboutItems.map(item =>
+    item.querySelector('img').getAttribute('src')
+);
+
+aboutItems.forEach((item, index) => {
+    bindGalleryItem(item, aboutImages, index);
+});
+
+/* 燈箱按鈕 */
+document.getElementById('lightboxClose')
+    .addEventListener('click', closeLightbox);
+
+document.getElementById('lightboxPrev')
+    .addEventListener('click', () => stepLightbox(-1));
+
+document.getElementById('lightboxNext')
+    .addEventListener('click', () => stepLightbox(1));
+
+lightbox.addEventListener('click', event => {
+    if (event.target === lightbox) {
+        closeLightbox();
+    }
+});
+
+/* 鍵盤操作 */
+document.addEventListener('keydown', event => {
+    if (lightbox.hidden) return;
+
+    if (event.key === 'Escape') {
+        closeLightbox();
+    }
+
+    if (event.key === 'ArrowLeft') {
+        stepLightbox(-1);
+    }
+
+    if (event.key === 'ArrowRight') {
+        stepLightbox(1);
+    }
+
+    if (event.key === 'Tab') {
+        const buttons = Array.from(
+            lightbox.querySelectorAll('button')
+        );
+
+        const first = buttons[0];
+        const last = buttons[buttons.length - 1];
+
+        if (
+            event.shiftKey
+            && document.activeElement === first
+        ) {
+            event.preventDefault();
+            last.focus();
+        } else if (
+            !event.shiftKey
+            && document.activeElement === last
+        ) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+});
+</script>
 </body>
 </html>
